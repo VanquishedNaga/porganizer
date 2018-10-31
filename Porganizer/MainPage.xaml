@@ -42,7 +42,7 @@
                         </Grid.ColumnDefinitions>
                         <StackPanel>
                             <TextBlock Text="Series:" Padding="5" Height="40"/>
-                            <TextBlock Text="Actress:" Padding="5" Height="40"/>
+                            <TextBlock Text="Performer:" Padding="5" Height="40"/>
                             <TextBlock Text="Title:" Padding="5" Height="40"/>
                             <TextBlock Text="Size:" Padding="5" Height="40"/>
                             <TextBlock Text="Length:" Padding="5" Height="40"/>

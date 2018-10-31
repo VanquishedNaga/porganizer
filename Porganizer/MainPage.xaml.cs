@@ -1,18 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Media.Imaging;
 
 using Windows.Storage;
@@ -75,21 +65,21 @@ namespace Porganizer
             folderPicker.FileTypeFilter.Add("*");
             StorageFolder selectedFolder = await folderPicker.PickSingleFolderAsync();
 
-            // Load content of selected folder.
-            LoadFolder(selectedFolder);
+            if (selectedFolder != null)
+            {
+                // Load content of selected folder.
+                LoadFolder(selectedFolder);
 
-            // Save folder in MRU.
-            string mruToken = mru.Add(selectedFolder);
-            localSettings.Values["PreviousFolder"] = mruToken;
+                // Save folder in MRU.
+                string mruToken = mru.Add(selectedFolder);
+                localSettings.Values["PreviousFolder"] = mruToken;
+            }
         }
 
         private async void LoadFolder(StorageFolder selectedFolder)
         {
             if (selectedFolder != null)
             {
-                // Start timer
-                stopwatch.Start();
-
                 // Clear old files.
                 thumbFileList.Clear();
 
@@ -107,32 +97,51 @@ namespace Porganizer
                 StorageFileQueryResult results = selectedFolder.CreateFileQueryWithOptions(queryOptions);
                 IReadOnlyList<StorageFile> fileList = await results.GetFilesAsync();
 
-                // Get thumbnails.
-                int count = 0;
+                // Populate file list.
+                BitmapImage image = new BitmapImage(new Uri("ms-appx:///Assets/StoreLogo.scale-400.png"));
                 foreach (StorageFile file in fileList)
                 {
-                    BitmapImage image = new BitmapImage();
-                    var temp = await file.GetThumbnailAsync(ThumbnailMode.VideosView);
-                    if (temp != null)
-                    {
-                        await image.SetSourceAsync(temp);
-                    }
                     thumbFileList.Add(new VideoFile { File = file, Thumbnail = image });
-                    count++;
-                    Progress.Value = (count * 100) / fileList.Count;
                 }
-                // Operation done.
-                stopwatch.Stop();
-                TextFileNum.Text = String.Format("{0} files", fileList.Count);
-                StatusText.Text = String.Format("Ready. {0} secs.", stopwatch.ElapsedMilliseconds / 1000);
 
-                // Set detail pane.
-                listView1.SelectedItem = thumbFileList[0];
+                TextFileNum.Text = String.Format("{0} files", fileList.Count);
+
+                // Generate thumbnails.
+                getThumbnails();
+                this.Bindings.Update();
             }
             else
             {
                 StatusText.Text = "Operation cancelled.";
             }
+        }
+
+        private async void getThumbnails()
+        {
+            // Start timer
+            stopwatch.Start();
+
+            int count = 0;
+
+            foreach (VideoFile video in thumbFileList)
+            {
+                // if (video.Thumbnail == null)
+                {
+                    BitmapImage image = new BitmapImage();
+                    var temp = await video.File.GetThumbnailAsync(ThumbnailMode.VideosView);
+                    if (temp != null)
+                    {
+                        await image.SetSourceAsync(temp);
+                    }
+                    video.Thumbnail = image;
+                    count++;
+                    Progress.Value = count == 0 ? 0 : (count * 100) / thumbFileList.Count;
+                }
+            }
+
+            // Operation done.
+            stopwatch.Stop();
+            StatusText.Text = String.Format("Ready. {0} secs.", stopwatch.ElapsedMilliseconds / 1000);
         }
 
         private async void LaunchVideo(object sender, DoubleTappedRoutedEventArgs e)
@@ -161,9 +170,11 @@ namespace Porganizer
                 TextFileLength.Text = (await temp.File.Properties.GetVideoPropertiesAsync()).Duration.Minutes.ToString() + " min";
 
                 // Set preview image.
-                BitmapImage image = new BitmapImage();
-                image.SetSource(await temp.File.GetThumbnailAsync(ThumbnailMode.SingleItem));
-                bitmap.Source = image;
+                // BitmapImage image = new BitmapImage();
+                // image.SetSource(await temp.File.GetThumbnailAsync(ThumbnailMode.SingleItem));
+                // bitmap.Source = image;
+
+                bitmap.Source = temp.Thumbnail;
 
                 // Set screenshot image.
 
@@ -245,10 +256,10 @@ namespace Porganizer
                 this.OnPropertyChanged();
             }
         }
-        public void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        public void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             // Raise the PropertyChanged event, passing the name of the property whose value has changed.
-            this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
     }
