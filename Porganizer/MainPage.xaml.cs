@@ -152,7 +152,7 @@ namespace Porganizer
             {
                 StorageFolder folder = await video.File.GetParentAsync();
                 var queryOptions = new QueryOptions(CommonFileQuery.DefaultQuery, fileTypeFilter);
-                queryOptions.ApplicationSearchFilter = "System.FileName:*" + Path.GetFileNameWithoutExtension(video.File.Name) + "*";
+                queryOptions.ApplicationSearchFilter = "System.FileName:*\"" + Path.GetFileNameWithoutExtension(video.File.Name) + "\"*";
 
                 StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(queryOptions);
 
@@ -169,6 +169,38 @@ namespace Porganizer
             if (selectedFile.Screen != null)
             {
                 await Windows.System.Launcher.LaunchFileAsync(selectedFile.Screen);
+            }
+        }
+
+        private async void Rename(object sender, RoutedEventArgs e)
+        {
+            // Remove whitespaces from start and end.
+            TextFileSeries.Text = TextFileSeries.Text.Trim();
+            TextFileActress.Text = TextFileActress.Text.Trim();
+            TextFileTitle.Text = TextFileTitle.Text.Trim();
+
+            String newName = "[" + TextFileSeries.Text + "]";
+            // Only include if string is not empty.
+            if (TextFileActress.Text != "")
+            {
+                newName += " " + TextFileActress.Text;
+            }
+            if (TextFileTitle.Text != "")
+            {
+                newName += " (" + TextFileTitle.Text + ")";
+            }
+
+            try
+            {
+                await selectedFile.File.RenameAsync(newName + selectedFile.File.FileType);
+
+                if (selectedFile.Screen != null)
+                {
+                    await selectedFile.Screen.RenameAsync(selectedFile.File.Name + selectedFile.Screen.FileType);
+                }
+            }
+            catch (Exception)
+            {
             }
         }
 
@@ -194,7 +226,6 @@ namespace Porganizer
                 selectedFile = temp;
 
                 // Display video details.
-                TextFileName.Text = temp.File.Name;
                 TextFileSize.Text = ((await temp.File.GetBasicPropertiesAsync()).Size / 1024 / 1024).ToString() + " MB";
                 TextFileLength.Text = (await temp.File.Properties.GetVideoPropertiesAsync()).Duration.Minutes.ToString() + " min";
 
@@ -219,16 +250,16 @@ namespace Porganizer
                     StatusText.Text = "No screens.";
                 }
 
-                Match series = Regex.Match(temp.File.Name, @"^\[(.*)\]\s?(.+)(\s+(\S+))?(\s+\(\d+\))?\.\w+$");
+                Match series = Regex.Match(Path.GetFileNameWithoutExtension(temp.File.Name), @"^\[(.+?)\]\s*(.+?)\s*\((.+?)\)$");
                 if (series.Success)
                 {
                     TextFileSeries.Text = series.Groups[1].Value;
-                    TextFileActress.Text = series.Groups[4].Value;
-                    TextFileTitle.Text = series.Groups[2].Value;
+                    TextFileActress.Text = series.Groups[2].Value;
+                    TextFileTitle.Text = series.Groups[3].Value;
                 }
                 else
                 {
-                    TextFileSeries.Text = "";
+                    TextFileSeries.Text = Path.GetFileNameWithoutExtension(temp.File.Name);
                     TextFileActress.Text = "";
                     TextFileTitle.Text = "";
                 }
