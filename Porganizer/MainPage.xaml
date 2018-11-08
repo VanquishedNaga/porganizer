@@ -34,7 +34,7 @@
             <SplitView.Pane>
                 <StackPanel Padding="20">
                     <TextBlock x:Name="TextFileName" HorizontalAlignment="Stretch" Height="Auto" TextWrapping="Wrap" VerticalAlignment="Stretch" Padding="5"/>
-                    <Image x:Name="bitmap" Height="Auto" HorizontalAlignment="Stretch"/>
+                    <Image x:Name="bitmap" Height="200" HorizontalAlignment="Stretch"/>
                     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -55,7 +55,7 @@
                             <TextBlock x:Name="TextFileLength" Padding="5" Height="40"/>
                         </StackPanel>
                     </Grid>
-                    <Image x:Name="screenshot" Height="Auto" HorizontalAlignment="Stretch"/>
+                    <Image x:Name="ImgScreenshot" Height="200" HorizontalAlignment="Stretch" Tapped="Screens_Clicked"/>
                     <ListView VerticalAlignment="Stretch" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" MinHeight="100">
                     </ListView>
                 </StackPanel>
@@ -82,6 +82,7 @@
                         <MenuFlyout x:Name="videoMenuFlyout">
                             <MenuFlyout.Items>
                                 <MenuFlyoutItem x:Name="Play" Text="Play" Click="Play_Clicked" />
+                                <MenuFlyoutItem x:Name="Screens" Text="Screens" Click="Menu_Screens_Clicked" />
                                 <MenuFlyoutItem x:Name="OpenFileLocation" Text="Open file location" Click="OpenFileLocation_Clicked" />
                             </MenuFlyout.Items>
                         </MenuFlyout>

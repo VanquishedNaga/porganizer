@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
+using System.IO;
 
 namespace Porganizer
 {
@@ -24,6 +25,7 @@ namespace Porganizer
     {
         public ObservableCollection<VideoFile> thumbFileList = new ObservableCollection<VideoFile>();
         VideoFile rightClickedFile;
+        VideoFile selectedFile;
         List<Task<StorageItemThumbnail>> thumbnailOperations;
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         StorageFolder localFolder = ApplicationData.Current.LocalFolder;
@@ -108,7 +110,7 @@ namespace Porganizer
 
                 // Generate thumbnails.
                 getThumbnails();
-                this.Bindings.Update();
+                findScreens(selectedFolder);
             }
             else
             {
@@ -125,23 +127,49 @@ namespace Porganizer
 
             foreach (VideoFile video in thumbFileList)
             {
-                // if (video.Thumbnail == null)
+                BitmapImage image = new BitmapImage();
+                var temp = await video.File.GetThumbnailAsync(ThumbnailMode.VideosView);
+                if (temp != null)
                 {
-                    BitmapImage image = new BitmapImage();
-                    var temp = await video.File.GetThumbnailAsync(ThumbnailMode.VideosView);
-                    if (temp != null)
-                    {
-                        await image.SetSourceAsync(temp);
-                    }
-                    video.Thumbnail = image;
-                    count++;
-                    Progress.Value = count == 0 ? 0 : (count * 100) / thumbFileList.Count;
+                    await image.SetSourceAsync(temp);
                 }
+                video.Thumbnail = image;
+                count++;
+                Progress.Value = count == 0 ? 0 : (count * 100) / thumbFileList.Count;
             }
 
             // Operation done.
             stopwatch.Stop();
             StatusText.Text = String.Format("Ready. {0} secs.", stopwatch.ElapsedMilliseconds / 1000);
+        }
+
+        private async void findScreens(StorageFolder selectedFolder)
+        {
+            List<string> fileTypeFilter = new List<string>();
+            fileTypeFilter.Add(".jpg");
+
+            foreach (VideoFile video in thumbFileList)
+            {
+                StorageFolder folder = await video.File.GetParentAsync();
+                var queryOptions = new QueryOptions(CommonFileQuery.DefaultQuery, fileTypeFilter);
+                queryOptions.ApplicationSearchFilter = "System.FileName:*" + Path.GetFileNameWithoutExtension(video.File.Name) + "*";
+
+                StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(queryOptions);
+
+                var files = await queryResult.GetFilesAsync();
+                if (files.Count > 0)
+                {
+                    video.Screen = files[0];
+                }
+            }
+        }
+
+        private async void Screens_Clicked(object sender, RoutedEventArgs e)
+        {
+            if (selectedFile.Screen != null)
+            {
+                await Windows.System.Launcher.LaunchFileAsync(selectedFile.Screen);
+            }
         }
 
         private async void LaunchVideo(object sender, DoubleTappedRoutedEventArgs e)
@@ -160,10 +188,11 @@ namespace Porganizer
         // Called when left click on list member to select.
         private async void SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            StatusText.Text = "File selected.";
             VideoFile temp = listView1.SelectedItem as VideoFile;
             if (temp != null)
             {
+                selectedFile = temp;
+
                 // Display video details.
                 TextFileName.Text = temp.File.Name;
                 TextFileSize.Text = ((await temp.File.GetBasicPropertiesAsync()).Size / 1024 / 1024).ToString() + " MB";
@@ -177,7 +206,18 @@ namespace Porganizer
                 bitmap.Source = temp.Thumbnail;
 
                 // Set screenshot image.
-
+                if (temp.Screen != null)
+                {
+                    BitmapImage screen = new BitmapImage();
+                    screen.SetSource(await temp.Screen.GetThumbnailAsync(ThumbnailMode.SingleItem));
+                    ImgScreenshot.Source = screen;
+                    StatusText.Text = "Screens.";
+                }
+                else
+                {
+                    ImgScreenshot.Source = null;
+                    StatusText.Text = "No screens.";
+                }
 
                 Match series = Regex.Match(temp.File.Name, @"^\[(.*)\]\s?(.+)(\s+(\S+))?(\s+\(\d+\))?\.\w+$");
                 if (series.Success)
@@ -198,8 +238,14 @@ namespace Porganizer
         private void ListView_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             ListView listView = (ListView)sender;
-            videoMenuFlyout.ShowAt(listView, e.GetPosition(listView));
             rightClickedFile = ((FrameworkElement)e.OriginalSource).DataContext as VideoFile;
+
+            if (rightClickedFile.Screen == null)
+            {
+                videoMenuFlyout.Items[1].Visibility = Visibility.Collapsed;
+            }
+
+            videoMenuFlyout.ShowAt(listView, e.GetPosition(listView));
             StatusText.Text = rightClickedFile.File.Name;
 
             //FrameworkElement element = sender as FrameworkElement;
@@ -212,6 +258,14 @@ namespace Porganizer
             if (await Windows.System.Launcher.LaunchFileAsync(rightClickedFile.File))
             {
                 StatusText.Text = "Video launched.";
+            }
+        }
+
+        private async void Menu_Screens_Clicked(object sender, RoutedEventArgs e)
+        {
+            if (rightClickedFile.Screen != null)
+            {
+                await Windows.System.Launcher.LaunchFileAsync(rightClickedFile.Screen);
             }
         }
 
@@ -230,6 +284,7 @@ namespace Porganizer
     public class VideoFile : INotifyPropertyChanged
     {
         private StorageFile file;
+        private StorageFile screen;
         private BitmapImage thumbnail;
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
         public StorageFile File
@@ -241,6 +296,18 @@ namespace Porganizer
             set
             {
                 this.file = value;
+                this.OnPropertyChanged();
+            }
+        }
+        public StorageFile Screen
+        {
+            get
+            {
+                return this.screen;
+            }
+            set
+            {
+                this.screen = value;
                 this.OnPropertyChanged();
             }
         }
