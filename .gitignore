@@ -2,6 +2,7 @@
 ###################
 Porganizer/bin/
 Porganizer/obj/
+Porganizer/Porganizer.csproj.user
 .vs/
 
 # Compiled source #
