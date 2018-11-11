@@ -73,8 +73,8 @@
                                     <RowDefinition Height="70"/>
                                 </Grid.RowDefinitions>
 
-                                <Image Source="{x:Bind Thumbnail}" HorizontalAlignment="Left" Margin="5,5,5,5"/>
-                                <TextBlock Text="{x:Bind File.Name}" Grid.Column="1" Margin="5,5,5,5"/>
+                                <Image Source="{x:Bind Thumbnail, Mode=OneWay}" HorizontalAlignment="Left" Margin="5,5,5,5"/>
+                                <TextBlock Text="{x:Bind File.Name, Mode=OneWay}" Grid.Column="1" Margin="5,5,5,5"/>
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>

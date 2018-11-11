@@ -26,6 +26,7 @@ namespace Porganizer
         public ObservableCollection<VideoFile> thumbFileList = new ObservableCollection<VideoFile>();
         VideoFile rightClickedFile;
         VideoFile selectedFile;
+        int selectedIndex;
         List<Task<StorageItemThumbnail>> thumbnailOperations;
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         StorageFolder localFolder = ApplicationData.Current.LocalFolder;
@@ -194,6 +195,8 @@ namespace Porganizer
             {
                 await selectedFile.File.RenameAsync(newName + selectedFile.File.FileType);
 
+                thumbFileList[selectedIndex].OnPropertyChanged("File");
+
                 if (selectedFile.Screen != null)
                 {
                     await selectedFile.Screen.RenameAsync(selectedFile.File.Name + selectedFile.Screen.FileType);
@@ -224,6 +227,7 @@ namespace Porganizer
             if (temp != null)
             {
                 selectedFile = temp;
+                selectedIndex = listView1.SelectedIndex;
 
                 // Display video details.
                 TextFileSize.Text = ((await temp.File.GetBasicPropertiesAsync()).Size / 1024 / 1024).ToString() + " MB";
