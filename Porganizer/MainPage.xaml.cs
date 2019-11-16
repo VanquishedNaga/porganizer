@@ -18,6 +18,13 @@ using System.Runtime.CompilerServices;
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using System.IO;
+using System.Security.Cryptography;
+
+using DataAccessLibrary;
+using Windows.Security.Cryptography.Core;
+using Windows.Security.Cryptography;
+using Windows.Storage.Streams;
+using Windows.Foundation;
 
 namespace Porganizer
 {
@@ -27,44 +34,56 @@ namespace Porganizer
         VideoFile rightClickedFile;
         VideoFile selectedFile;
         int selectedIndex;
-        List<Task<StorageItemThumbnail>> thumbnailOperations;
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         StorageFolder localFolder = ApplicationData.Current.LocalFolder;
         public Task Initialization { get; private set; }
         Stopwatch stopwatch = new Stopwatch();
         StorageItemMostRecentlyUsedList mru = StorageApplicationPermissions.MostRecentlyUsedList;
 
+        // The cryptographic service provider.
+        private SHA256 Sha256 = SHA256.Create();
 
         public MainPage()
         {
             this.InitializeComponent();
-            StatusText.Text = "Ready.";
-            Initialization = InitAsync();
+            AddLog("Ready.");
+            Initialization = LoadFolderFromPreviousSession();
+
+            DataAccess.InitializeDatabase();
         }
 
-        private async Task InitAsync()
+        private void AddData(object sender, RoutedEventArgs e)
+        {
+            DataAccess.AddData(Input_Box.Text);
+
+            Output.ItemsSource = DataAccess.GetData();
+        }
+
+        private async Task LoadFolderFromPreviousSession()
         {
             // Load folder from previous session if available.
-            StatusText.Text = "Looking for previous folder...";
+            AddLog("Looking for previous folder...");
             string token = localSettings.Values["PreviousFolder"] as string;
-            StatusText.Text = string.Format("token: {0}", token);
+            AddLog(string.Format("token: {0}", token));
             if (token != null)
             {
                 var tempFolder = await mru.GetItemAsync(token);
                 LoadFolder(tempFolder as StorageFolder);
-                StatusText.Text = "Folder loaded.";
+                AddLog("Folder loaded.");
             }
             else
             {
-                StatusText.Text = "No previous folder found.";
+                AddLog("No previous folder found.");
             }
         }
 
+        // Called when user selects a new folder.
         private async void AddFolder(object sender, RoutedEventArgs e)
         {
-
-            FolderPicker folderPicker = new FolderPicker();
-            folderPicker.SuggestedStartLocation = PickerLocationId.Desktop;
+            FolderPicker folderPicker = new FolderPicker
+            {
+                SuggestedStartLocation = PickerLocationId.Desktop
+            };
             folderPicker.FileTypeFilter.Add("*");
             StorageFolder selectedFolder = await folderPicker.PickSingleFolderAsync();
 
@@ -86,16 +105,18 @@ namespace Porganizer
                 // Clear old files.
                 thumbFileList.Clear();
 
-                StatusText.Text = "Loading files...";
+                AddLog("Loading files...");
                 // Application now has read/write access to all contents in the picked folder (including other sub-folder contents).
                 StorageApplicationPermissions.FutureAccessList.AddOrReplace("PickedFolderToken", selectedFolder);
 
                 // Filter to get video files only.
-                List<string> fileTypeFilter = new List<string>();
-                fileTypeFilter.Add(".mp4");
-                fileTypeFilter.Add(".wmv");
-                fileTypeFilter.Add(".mkv");
-                fileTypeFilter.Add(".avi");
+                List<string> fileTypeFilter = new List<string>
+                {
+                    ".mp4",
+                    ".wmv",
+                    ".mkv",
+                    ".avi"
+                };
                 QueryOptions queryOptions = new QueryOptions(CommonFileQuery.OrderByName, fileTypeFilter);
                 StorageFileQueryResult results = selectedFolder.CreateFileQueryWithOptions(queryOptions);
                 IReadOnlyList<StorageFile> fileList = await results.GetFilesAsync();
@@ -110,50 +131,68 @@ namespace Porganizer
                 TextFileNum.Text = String.Format("{0} files", fileList.Count);
 
                 // Generate thumbnails.
-                getThumbnails();
-                findScreens(selectedFolder);
+                GetThumbnailsForAllFiles();
+                FindScreens(selectedFolder);
+                CheckDB();
+            }
+        }
+
+        private async void GetThumbnailsForAllFiles()
+        {
+            AddLog("Getting thumbnails...");
+            if (thumbFileList.Count > 0)
+            {
+                List<Task> thumbnailOperations = new List<Task>();
+
+                // Start timer
+                stopwatch.Restart();
+
+                foreach (VideoFile video in thumbFileList)
+                {
+                    thumbnailOperations.Add(GetThumbnailsForOneFile(video));
+                }
+
+                await Task.WhenAll(thumbnailOperations);
+
+                // Operation done.
+                stopwatch.Stop();
+                AddLog(String.Format("Got all thumbnails in {0} secs.", stopwatch.ElapsedMilliseconds / 1000));
             }
             else
             {
-                StatusText.Text = "Operation cancelled.";
+                AddLog("No video files.");
             }
         }
 
-        private async void getThumbnails()
+        async Task GetThumbnailsForOneFile(VideoFile video)
         {
-            // Start timer
-            stopwatch.Start();
-
-            int count = 0;
-
-            foreach (VideoFile video in thumbFileList)
+            BitmapImage image = new BitmapImage();
+            var temp = await video.File.GetThumbnailAsync(ThumbnailMode.VideosView);
+            if (temp == null)
             {
-                BitmapImage image = new BitmapImage();
-                var temp = await video.File.GetThumbnailAsync(ThumbnailMode.VideosView);
-                if (temp != null)
-                {
-                    await image.SetSourceAsync(temp);
-                }
-                video.Thumbnail = image;
-                count++;
-                Progress.Value = count == 0 ? 0 : (count * 100) / thumbFileList.Count;
+                AddLog("No thumbnail found for" + video.File.Name + '.');
             }
-
-            // Operation done.
-            stopwatch.Stop();
-            StatusText.Text = String.Format("Ready. {0} secs.", stopwatch.ElapsedMilliseconds / 1000);
+            else
+            {
+                await image.SetSourceAsync(temp);
+                video.Thumbnail = image;
+            }            
         }
 
-        private async void findScreens(StorageFolder selectedFolder)
+        private async void FindScreens(StorageFolder selectedFolder)
         {
-            List<string> fileTypeFilter = new List<string>();
-            fileTypeFilter.Add(".jpg");
+            List<string> fileTypeFilter = new List<string>
+            {
+                ".jpg"
+            };
 
             foreach (VideoFile video in thumbFileList)
             {
                 StorageFolder folder = await video.File.GetParentAsync();
-                var queryOptions = new QueryOptions(CommonFileQuery.DefaultQuery, fileTypeFilter);
-                queryOptions.ApplicationSearchFilter = "System.FileName:*\"" + Path.GetFileNameWithoutExtension(video.File.Name) + "\"*";
+                var queryOptions = new QueryOptions(CommonFileQuery.DefaultQuery, fileTypeFilter)
+                {
+                    ApplicationSearchFilter = "System.FileName:*\"" + Path.GetFileNameWithoutExtension(video.File.Name) + "\"*"
+                };
 
                 StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(queryOptions);
 
@@ -163,6 +202,11 @@ namespace Porganizer
                     video.Screen = files[0];
                 }
             }
+        }
+
+        private void CheckDB()
+        {
+
         }
 
         private async void Screens_Clicked(object sender, RoutedEventArgs e)
@@ -209,13 +253,12 @@ namespace Porganizer
 
         private async void LaunchVideo(object sender, DoubleTappedRoutedEventArgs e)
         {
-            StatusText.Text = "Launching video...";
-            var temp = listView1.SelectedItem as VideoFile;
-            if (temp != null)
+            AddLog("Launching video...");
+            if (listView1.SelectedItem is VideoFile temp)
             {
                 if (await Windows.System.Launcher.LaunchFileAsync(temp.File))
                 {
-                    StatusText.Text = "Video launched.";
+                    AddLog("Video launched.");
                 }
             }
         }
@@ -223,8 +266,7 @@ namespace Porganizer
         // Called when left click on list member to select.
         private async void SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            VideoFile temp = listView1.SelectedItem as VideoFile;
-            if (temp != null)
+            if (listView1.SelectedItem is VideoFile temp)
             {
                 selectedFile = temp;
                 selectedIndex = listView1.SelectedIndex;
@@ -246,12 +288,12 @@ namespace Porganizer
                     BitmapImage screen = new BitmapImage();
                     screen.SetSource(await temp.Screen.GetThumbnailAsync(ThumbnailMode.SingleItem));
                     ImgScreenshot.Source = screen;
-                    StatusText.Text = "Screens.";
+                    AddLog("Screens.");
                 }
                 else
                 {
                     ImgScreenshot.Source = null;
-                    StatusText.Text = "No screens.";
+                    AddLog("No screens.");
                 }
 
                 Match series = Regex.Match(Path.GetFileNameWithoutExtension(temp.File.Name), @"^\[(.+?)\]\s*(.+?)\s*\((.+?)\)$");
@@ -281,7 +323,7 @@ namespace Porganizer
             }
 
             videoMenuFlyout.ShowAt(listView, e.GetPosition(listView));
-            StatusText.Text = rightClickedFile.File.Name;
+            AddLog(rightClickedFile.File.Name);
 
             //FrameworkElement element = sender as FrameworkElement;
             //if (element != null) FlyoutBase.ShowAttachedFlyout(element);
@@ -289,10 +331,10 @@ namespace Porganizer
 
         private async void Play_Clicked(object sender, RoutedEventArgs e)
         {
-            StatusText.Text = "Launching video...";
+            AddLog("Launching video...");
             if (await Windows.System.Launcher.LaunchFileAsync(rightClickedFile.File))
             {
-                StatusText.Text = "Video launched.";
+                AddLog("Video launched.");
             }
         }
 
@@ -306,13 +348,54 @@ namespace Porganizer
 
         private async void OpenFileLocation_Clicked(object sender, RoutedEventArgs e)
         {
-            StatusText.Text = "Opening folder...";
+            AddLog("Opening folder...");
             StorageFolder folder = await rightClickedFile.File.GetParentAsync();
             var success = await Windows.System.Launcher.LaunchFolderAsync(folder);
             if (success)
             {
-                StatusText.Text = "Folder opened.";
+                AddLog("Folder opened.");
             }
+        }
+
+        /*private async Task HashAsync(StorageFile file)
+        {
+            HashAlgorithmProvider alg = HashAlgorithmProvider.OpenAlgorithm(HashAlgorithmNames.Md5);
+            var stream = await file.OpenStreamForReadAsync();
+            var inputStream = stream.AsInputStream();
+            uint capacity = 100000000;
+            Windows.Storage.Streams.Buffer buffer = new Windows.Storage.Streams.Buffer(capacity);
+            var hash = alg.CreateHash();
+
+            while (true)
+            {
+                await inputStream.ReadAsync(buffer, capacity, InputStreamOptions.None);
+                if (buffer.Length > 0)
+                    hash.Append(buffer);
+                else
+                    break;
+            }
+
+            string hashText = CryptographicBuffer.EncodeToHexString(hash.GetValueAndReset()).ToUpper();
+
+            inputStream.Dispose();
+            stream.Dispose();
+
+            return hashText;
+        }*/
+
+        // Compute the file's hash.
+        private byte[] GetHashSha256(string filename)
+        {
+            using (FileStream stream = File.OpenRead(filename))
+            {
+                return Sha256.ComputeHash(stream);
+            }
+        }
+
+        // Display log in debug window.
+        void AddLog(string log)
+        {
+            DebugOutput.Text = log + '\n' + DebugOutput.Text;
         }
     }
 

@@ -12,6 +12,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
 
         <CommandBar DefaultLabelPosition="Right">
@@ -33,6 +34,19 @@
         <SplitView IsPaneOpen="True" DisplayMode="Inline" OpenPaneLength="300" Grid.Row="1">
             <SplitView.Pane>
                 <StackPanel Padding="20">
+                    <Grid>
+                        <StackPanel>
+                            <TextBox Name="Input_Box"></TextBox>
+                            <!--<Button Click="Hash">Add</Button>-->
+                            <ListView Name="Output">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}"/>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </StackPanel>
+                    </Grid>
                     <Image x:Name="bitmap" Height="200" HorizontalAlignment="Stretch"/>
                     <Image x:Name="ImgScreenshot" Height="200" HorizontalAlignment="Stretch" Tapped="Screens_Clicked"/>
                     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
@@ -95,5 +109,7 @@
                 </ListView>
             </Grid>
         </SplitView>
+
+        <TextBox x:Name="DebugOutput" Grid.Row="3" AcceptsReturn="True"/>
     </Grid>
 </Page>
