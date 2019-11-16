@@ -170,7 +170,7 @@ namespace Porganizer
             var temp = await video.File.GetThumbnailAsync(ThumbnailMode.VideosView);
             if (temp == null)
             {
-                AddLog("No thumbnail found for" + video.File.Name + '.');
+                AddLog("No thumbnail found for " + video.File.Name + '.');
             }
             else
             {

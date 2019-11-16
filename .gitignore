@@ -3,6 +3,10 @@
 Porganizer/bin/
 Porganizer/obj/
 Porganizer/Porganizer.csproj.user
+
+DataAccessLibrary/bin/
+DataAccessLibrary/obj/
+
 .vs/
 
 # Compiled source #
