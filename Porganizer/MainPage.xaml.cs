@@ -132,7 +132,7 @@ namespace Porganizer
 
                 // Generate thumbnails.
                 GetThumbnailsForAllFiles();
-                FindScreens(selectedFolder);
+                FindScreensForAllFiles(selectedFolder);
                 CheckDB();
             }
         }
@@ -179,28 +179,33 @@ namespace Porganizer
             }            
         }
 
-        private async void FindScreens(StorageFolder selectedFolder)
+        private void FindScreensForAllFiles(StorageFolder selectedFolder)
+        {
+            foreach (VideoFile video in thumbFileList)
+            {
+                FindScreens(video);
+            }
+        }
+
+        private async void FindScreens(VideoFile video)
         {
             List<string> fileTypeFilter = new List<string>
             {
                 ".jpg"
             };
 
-            foreach (VideoFile video in thumbFileList)
+            var queryOptions = new QueryOptions(CommonFileQuery.DefaultQuery, fileTypeFilter)
             {
-                StorageFolder folder = await video.File.GetParentAsync();
-                var queryOptions = new QueryOptions(CommonFileQuery.DefaultQuery, fileTypeFilter)
-                {
-                    ApplicationSearchFilter = "System.FileName:*\"" + Path.GetFileNameWithoutExtension(video.File.Name) + "\"*"
-                };
+                ApplicationSearchFilter = "System.FileName:*\"" + Path.GetFileNameWithoutExtension(video.File.Name) + "\"*"
+            };
 
-                StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(queryOptions);
+            StorageFolder folder = await video.File.GetParentAsync();
+            StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(queryOptions);
 
-                var files = await queryResult.GetFilesAsync();
-                if (files.Count > 0)
-                {
-                    video.Screen = files[0];
-                }
+            var files = await queryResult.GetFilesAsync();
+            if (files.Count > 0)
+            {
+                video.Screen = files[0];
             }
         }
 
