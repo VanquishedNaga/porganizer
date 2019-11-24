@@ -63,10 +63,9 @@ namespace Porganizer
         {
             // Load folder from previous session if available.
             AddLog("Looking for previous folder...");
-            string token = localSettings.Values["PreviousFolder"] as string;
-            AddLog(string.Format("token: {0}", token));
-            if (token != null)
+            if (localSettings.Values["PreviousFolder"] is string token)
             {
+                AddLog(string.Format("token: {0}", token));
                 var tempFolder = await mru.GetItemAsync(token);
                 LoadFolder(tempFolder as StorageFolder);
                 AddLog("Folder loaded.");
@@ -279,11 +278,6 @@ namespace Porganizer
                 // Display video details.
                 TextFileSize.Text = ((await temp.File.GetBasicPropertiesAsync()).Size / 1024 / 1024).ToString() + " MB";
                 TextFileLength.Text = (await temp.File.Properties.GetVideoPropertiesAsync()).Duration.Minutes.ToString() + " min";
-
-                // Set preview image.
-                // BitmapImage image = new BitmapImage();
-                // image.SetSource(await temp.File.GetThumbnailAsync(ThumbnailMode.SingleItem));
-                // bitmap.Source = image;
 
                 bitmap.Source = temp.Thumbnail;
 

@@ -80,14 +80,14 @@
                         <DataTemplate x:DataType="local:VideoFile">
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="70"/>
+                                    <RowDefinition Height="80"/>
                                 </Grid.RowDefinitions>
 
-                                <Image Source="{x:Bind Thumbnail, Mode=OneWay}" HorizontalAlignment="Left" Margin="5,5,5,5"/>
+                                <Image Source="{x:Bind Thumbnail, Mode=OneWay}" Margin="5,5,5,5"/>
                                 <TextBlock Text="{x:Bind File.Name, Mode=OneWay}" Grid.Column="1" Margin="5,5,5,5"/>
                             </Grid>
                         </DataTemplate>
