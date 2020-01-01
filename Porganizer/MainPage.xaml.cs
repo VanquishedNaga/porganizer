@@ -40,6 +40,8 @@ namespace Porganizer
         Stopwatch stopwatch = new Stopwatch();
         StorageItemMostRecentlyUsedList mru = StorageApplicationPermissions.MostRecentlyUsedList;
 
+        string ListThumbnailPlaceholderPath = "ms-appx:///Assets/StoreLogo.scale-400.png";
+
         // The cryptographic service provider.
         private SHA256 Sha256 = SHA256.Create();
 
@@ -121,7 +123,7 @@ namespace Porganizer
                 IReadOnlyList<StorageFile> fileList = await results.GetFilesAsync();
 
                 // Populate file list.
-                BitmapImage image = new BitmapImage(new Uri("ms-appx:///Assets/StoreLogo.scale-400.png"));
+                BitmapImage image = new BitmapImage(new Uri(ListThumbnailPlaceholderPath));
                 foreach (StorageFile file in fileList)
                 {
                     thumbFileList.Add(new VideoFile { File = file, Thumbnail = image });
@@ -130,13 +132,14 @@ namespace Porganizer
                 TextFileNum.Text = String.Format("{0} files", fileList.Count);
 
                 // Generate thumbnails.
-                GetThumbnailsForAllFiles();
-                FindScreensForAllFiles(selectedFolder);
+                FindThumbnailsForAllFiles();
+                FindScreensForAllFiles();
+                FindGifForAllFiles();
                 CheckDB();
             }
         }
 
-        private async void GetThumbnailsForAllFiles()
+        private async void FindThumbnailsForAllFiles()
         {
             AddLog("Getting thumbnails...");
             if (thumbFileList.Count > 0)
@@ -178,7 +181,7 @@ namespace Porganizer
             }            
         }
 
-        private void FindScreensForAllFiles(StorageFolder selectedFolder)
+        private void FindScreensForAllFiles()
         {
             foreach (VideoFile video in thumbFileList)
             {
@@ -205,6 +208,39 @@ namespace Porganizer
             if (files.Count > 0)
             {
                 video.Screen = files[0];
+            }
+        }
+
+        private void FindGifForAllFiles()
+        {
+            foreach (VideoFile video in thumbFileList)
+            {
+                FindGif(video);
+            }
+        }
+
+        private async void FindGif(VideoFile video)
+        {
+            List<string> fileTypeFilter = new List<string>
+            {
+                ".gif"
+            };
+
+            var queryOptions = new QueryOptions(CommonFileQuery.DefaultQuery, fileTypeFilter)
+            {
+                ApplicationSearchFilter = "System.FileName:*\"" + Path.GetFileNameWithoutExtension(video.File.Name) + "\"*"
+            };
+
+            StorageFolder folder = await video.File.GetParentAsync();
+            StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(queryOptions);
+
+            var files = await queryResult.GetFilesAsync();
+            if (files.Count > 0)
+            {
+                IRandomAccessStream fileStream = await files[0].OpenAsync(FileAccessMode.Read);
+                BitmapImage image = new BitmapImage();
+                image.SetSource(fileStream);
+                video.Gif = image;
             }
         }
 
@@ -279,7 +315,14 @@ namespace Porganizer
                 TextFileSize.Text = ((await temp.File.GetBasicPropertiesAsync()).Size / 1024 / 1024).ToString() + " MB";
                 TextFileLength.Text = (await temp.File.Properties.GetVideoPropertiesAsync()).Duration.Minutes.ToString() + " min";
 
-                bitmap.Source = temp.Thumbnail;
+                if (temp.Gif != null)
+                {
+                    bitmap.Source = temp.Gif;
+                }
+                else
+                {
+                    bitmap.Source = temp.Thumbnail;
+                }
 
                 // Set screenshot image.
                 if (temp.Screen != null)
@@ -294,7 +337,7 @@ namespace Porganizer
                     ImgScreenshot.Source = null;
                     AddLog("No screens.");
                 }
-
+                
                 Match series = Regex.Match(Path.GetFileNameWithoutExtension(temp.File.Name), @"^\[(.+?)\]\s*(.+?)\s*\((.+?)\)$");
                 if (series.Success)
                 {
@@ -403,6 +446,7 @@ namespace Porganizer
         private StorageFile file;
         private StorageFile screen;
         private BitmapImage thumbnail;
+        private BitmapImage gif;
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
         public StorageFile File
         {
@@ -437,6 +481,18 @@ namespace Porganizer
             set
             {
                 this.thumbnail = value;
+                this.OnPropertyChanged();
+            }
+        }
+        public BitmapImage Gif
+        {
+            get
+            {
+                return this.gif;
+            }
+            set
+            {
+                this.gif = value;
                 this.OnPropertyChanged();
             }
         }
