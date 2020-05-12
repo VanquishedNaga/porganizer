@@ -12,7 +12,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="100"/>
+            <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
 
         <CommandBar DefaultLabelPosition="Right">
@@ -47,8 +47,8 @@
                             </ListView>
                         </StackPanel>
                     </Grid>
-                    <Image x:Name="bitmap" Height="200" HorizontalAlignment="Stretch"/>
-                    <Image x:Name="ImgScreenshot" Height="200" HorizontalAlignment="Stretch" Tapped="Screens_Clicked"/>
+                    <Image x:Name="bitmap" Height="170" HorizontalAlignment="Stretch"/>
+                    <Image x:Name="ImgScreenshot" Height="170" HorizontalAlignment="Stretch" Tapped="Screens_Clicked"/>
                     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
