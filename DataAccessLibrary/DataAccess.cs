@@ -67,5 +67,42 @@ namespace DataAccessLibrary
 
             return entries;
         }
+
+        public static List<DatabaseVideoFile> GetVideoList()
+        {
+            List<DatabaseVideoFile> entries = new List<DatabaseVideoFile>();
+
+            using (SqliteConnection db =
+                new SqliteConnection("Filename=sqliteSample.db"))
+            {
+                db.Open();
+
+                SqliteCommand selectCommand = new SqliteCommand
+                    ("SELECT Text_Entry from MyTable", db);
+
+                SqliteDataReader query = selectCommand.ExecuteReader();
+
+                while (query.Read())
+                {
+                    DatabaseVideoFile temp = new DatabaseVideoFile
+                    {
+                        path = query.GetString(0)
+                    };
+                    entries.Add(temp);
+                }
+
+                db.Close();
+            }
+
+            return entries;
+        }
+    }
+
+    public class DatabaseVideoFile
+    {
+        public string path;
+        int rating;
+        int actress;
+
     }
 }

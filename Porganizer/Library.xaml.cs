@@ -42,16 +42,35 @@ namespace Porganizer
 
         string ListThumbnailPlaceholderPath = "ms-appx:///Assets/StoreLogo.scale-400.png";
 
-        // The cryptographic service provider.
-        private SHA256 Sha256 = SHA256.Create();
+        List<DatabaseVideoFile> databaseVideoFiles = new List<DatabaseVideoFile>();
 
         public Library()
         {
             this.InitializeComponent();
             AddLog("Ready.");
-            Initialization = LoadFolderFromPreviousSession();
+            // Initialization = LoadFolderFromPreviousSession();
 
             DataAccess.InitializeDatabase();
+
+            Initialization = LoadFromDatabase();
+        }
+
+        // Get video files from database.
+        private async Task LoadFromDatabase()
+        {
+            databaseVideoFiles = DataAccess.GetVideoList();
+            BitmapImage image = new BitmapImage(new Uri(ListThumbnailPlaceholderPath));
+
+            foreach (DatabaseVideoFile videoFile in databaseVideoFiles)
+            {
+                StorageFile file = await StorageFile.GetFileFromPathAsync(videoFile.path);
+                thumbFileList.Add(new VideoFile { File = file, Thumbnail = image });
+            }
+
+            // Generate thumbnails.
+            FindThumbnailsForAllFiles();
+            FindScreensForAllFiles();
+            FindGifForAllFiles();
         }
 
         private async Task LoadFolderFromPreviousSession()
@@ -126,7 +145,6 @@ namespace Porganizer
                 FindThumbnailsForAllFiles();
                 FindScreensForAllFiles();
                 FindGifForAllFiles();
-                CheckDB();
             }
         }
 
@@ -233,11 +251,6 @@ namespace Porganizer
                 image.SetSource(fileStream);
                 video.Gif = image;
             }
-        }
-
-        private void CheckDB()
-        {
-
         }
 
         private async void Screens_Clicked(object sender, RoutedEventArgs e)
