@@ -48,11 +48,11 @@ namespace Porganizer
         {
             this.InitializeComponent();
             AddLog("Ready.");
-            // Initialization = LoadFolderFromPreviousSession();
+            Initialization = LoadFolderFromPreviousSession();
 
             DataAccess.InitializeDatabase();
 
-            Initialization = LoadFromDatabase();
+            // Initialization = LoadFromDatabase();
         }
 
         // Get video files from database.
@@ -64,13 +64,8 @@ namespace Porganizer
             foreach (DatabaseVideoFile videoFile in databaseVideoFiles)
             {
                 StorageFile file = await StorageFile.GetFileFromPathAsync(videoFile.path);
-                thumbFileList.Add(new VideoFile { File = file, Thumbnail = image });
+                thumbFileList.Add(new VideoFile(file));
             }
-
-            // Generate thumbnails.
-            FindThumbnailsForAllFiles();
-            FindScreensForAllFiles();
-            FindGifForAllFiles();
         }
 
         private async Task LoadFolderFromPreviousSession()
@@ -138,118 +133,9 @@ namespace Porganizer
                 BitmapImage image = new BitmapImage(new Uri(ListThumbnailPlaceholderPath));
                 foreach (StorageFile file in fileList)
                 {
-                    thumbFileList.Add(new VideoFile { File = file, Thumbnail = image });
+                    // thumbFileList.Add(new VideoFile { File = file, Thumbnail = image });
+                    thumbFileList.Add(new VideoFile(file));
                 }
-
-                // Generate thumbnails.
-                FindThumbnailsForAllFiles();
-                FindScreensForAllFiles();
-                FindGifForAllFiles();
-            }
-        }
-
-        private async void FindThumbnailsForAllFiles()
-        {
-            AddLog("Getting thumbnails...");
-            if (thumbFileList.Count > 0)
-            {
-                List<Task> thumbnailOperations = new List<Task>();
-
-                // Start timer
-                stopwatch.Restart();
-
-                foreach (VideoFile video in thumbFileList)
-                {
-                    thumbnailOperations.Add(GetThumbnailsForOneFile(video));
-                }
-
-                await Task.WhenAll(thumbnailOperations);
-
-                // Operation done.
-                stopwatch.Stop();
-                AddLog(String.Format("Got all thumbnails in {0} secs.", stopwatch.ElapsedMilliseconds / 1000));
-            }
-            else
-            {
-                AddLog("No video files.");
-            }
-        }
-
-        async Task GetThumbnailsForOneFile(VideoFile video)
-        {
-            BitmapImage image = new BitmapImage();
-            var temp = await video.File.GetThumbnailAsync(ThumbnailMode.VideosView);
-            if (temp == null)
-            {
-                AddLog("No thumbnail found for " + video.File.Name + '.');
-            }
-            else
-            {
-                await image.SetSourceAsync(temp);
-                video.Thumbnail = image;
-            }
-        }
-
-        private void FindScreensForAllFiles()
-        {
-            foreach (VideoFile video in thumbFileList)
-            {
-                FindScreens(video);
-            }
-        }
-
-        private async void FindScreens(VideoFile video)
-        {
-            List<string> fileTypeFilter = new List<string>
-            {
-                ".jpg"
-            };
-
-            var queryOptions = new QueryOptions(CommonFileQuery.DefaultQuery, fileTypeFilter)
-            {
-                ApplicationSearchFilter = "System.FileName:*\"" + Path.GetFileNameWithoutExtension(video.File.Name) + "\"*"
-            };
-
-            StorageFolder folder = await video.File.GetParentAsync();
-            StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(queryOptions);
-
-            var files = await queryResult.GetFilesAsync();
-            if (files.Count > 0)
-            {
-                video.Screen = files[0];
-            }
-        }
-
-        private void FindGifForAllFiles()
-        {
-            foreach (VideoFile video in thumbFileList)
-            {
-                FindGif(video);
-            }
-        }
-
-        private async void FindGif(VideoFile video)
-        {
-            List<string> fileTypeFilter = new List<string>
-            {
-                ".gif"
-            };
-
-            var queryOptions = new QueryOptions(CommonFileQuery.DefaultQuery, fileTypeFilter)
-            {
-                ApplicationSearchFilter = "System.FileName:*\"" + Path.GetFileNameWithoutExtension(video.File.Name) + "\"*"
-            };
-
-            StorageFolder folder = await video.File.GetParentAsync();
-            StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(queryOptions);
-
-            var files = await queryResult.GetFilesAsync();
-            if (files.Count > 0)
-            {
-                IRandomAccessStream fileStream = await files[0].OpenAsync(FileAccessMode.Read);
-                BitmapImage image = new BitmapImage();
-                image.SetSource(fileStream);
-                video.Gif = image;
             }
         }
 

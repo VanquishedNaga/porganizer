@@ -34,7 +34,7 @@
           "lib/netstandard1.0/_._": {}
         }
       },
-      "NETStandard.Library/2.0.1": {
+      "NETStandard.Library/2.0.3": {
         "type": "package",
         "dependencies": {
           "Microsoft.NETCore.Platforms": "1.1.0"
@@ -244,10 +244,11 @@
   },
   "libraries": {
     "Microsoft.Data.Sqlite/1.1.1": {
-      "sha512": "8sS9qdQ+0aO2PcWegJcLF+WlVSR9ZGJmh5D7/gHtNzsXY/z1pNiF1JYvGAU37ekdS2PjvDDwVbngsbwtyS0cHw==",
+      "sha512": "EA/L0kQtkPm037kHyLtt/9dsB4ephlgmXgaQbW2qcb2jcW8R5RbfT9zh1j9amZIqFP3OwpnZ7kt7xTwC8z7M1A==",
       "type": "package",
       "path": "microsoft.data.sqlite/1.1.1",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "lib/net451/Microsoft.Data.Sqlite.dll",
         "lib/net451/Microsoft.Data.Sqlite.xml",
@@ -258,10 +259,11 @@
       ]
     },
     "Microsoft.NETCore.Platforms/1.1.0": {
-      "sha512": "bLpT1f/SFlO1CzqXG12KnJzpZs6lv24uX2Rzi4Fmm0noJpNlnWRVryuO3yK18Ca04t/YHcO1e1Z0WDfjseqNzw==",
+      "sha512": "kz0PEW2lhqygehI/d6XsPCQzD7ff7gUJaVGPVETX611eadGsA3A877GdSlU0LRVMCTH/+P3o2iDTak+S08V2+A==",
       "type": "package",
       "path": "microsoft.netcore.platforms/1.1.0",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
@@ -272,10 +274,11 @@
       ]
     },
     "Microsoft.NETCore.Targets/1.1.0": {
-      "sha512": "t3TNy7WDwNWV3A9+DYvnx4mAYdyGQdap6lB6Da+XUA91hJnvjQb1hqPRjef+rDpE3/nV3eO2WcSiwR4oW/9MJg==",
+      "sha512": "aOZA3BWfz9RXjpzt0sRJJMjAscAUm3Hoa4UWAfceV9UTYxgwZ1lZt5nO2myFf+/jetYQo4uTP7zS8sJY67BBxg==",
       "type": "package",
       "path": "microsoft.netcore.targets/1.1.0",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
@@ -285,14 +288,14 @@
         "runtime.json"
       ]
     },
-    "NETStandard.Library/2.0.1": {
-      "sha512": "oA6nwv9MhEKYvLpjZ0ggSpb1g4CQViDVQjLUcDWg598jtvJbpfeP2reqwI1GLW2TbxC/Ml7xL6BBR1HmKPXlTg==",
+    "NETStandard.Library/2.0.3": {
+      "sha512": "st47PosZSHrjECdjeIzZQbzivYBJFv6P2nv4cj2ypdI204DO+vZ7l5raGMiX4eXMJ53RfOIg+/s4DHVZ54Nu2A==",
       "type": "package",
-      "path": "netstandard.library/2.0.1",
+      "path": "netstandard.library/2.0.3",
       "files": [
+        ".nupkg.metadata",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
-        "build/NETStandard.Library.targets",
         "build/netstandard2.0/NETStandard.Library.targets",
         "build/netstandard2.0/ref/Microsoft.Win32.Primitives.dll",
         "build/netstandard2.0/ref/System.AppContext.dll",
@@ -409,15 +412,16 @@
         "build/netstandard2.0/ref/netstandard.dll",
         "build/netstandard2.0/ref/netstandard.xml",
         "lib/netstandard1.0/_._",
-        "netstandard.library.2.0.1.nupkg.sha512",
+        "netstandard.library.2.0.3.nupkg.sha512",
         "netstandard.library.nuspec"
       ]
     },
     "SQLite/3.13.0": {
-      "sha512": "JoDKeLyGRikRMiPaGTdLlV/HMcLfIrYXzgbAaREysfzvgTXgugymq+Te1bAqBNAb7lH1Uk6XLmM9/U+kHWFRnw==",
+      "sha512": "MJfRiz2p6aMVOxrxGMdVzhpzI0oxTgZSwC8eVuOpV8L7yYaFUu8q/OFYwv9P0/aZ/pdEu24O6gma6wZJMTun9A==",
       "type": "package",
       "path": "sqlite/3.13.0",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "build/net45/SQLite.props",
         "lib/netstandard1.0/_._",
@@ -434,10 +438,11 @@
       ]
     },
     "System.Collections/4.3.0": {
-      "sha512": "/RO6DxDIzcceka4RmnJ6P8anXxdkmdRGKpliRZKVB84y4LzpqMMWTLAGRQXLc5ET15z1Xr7YaNZx1rbWuqRVcg==",
+      "sha512": "3Dcj85/TBdVpL5Zr+gEEBUuFe2icOnLalmEh9hfck1PTYbbyWuZgh4fmm2ysCLTrqLQw6t3TgTyJ+VLp+Qb+Lw==",
       "type": "package",
       "path": "system.collections/4.3.0",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
@@ -501,10 +506,11 @@
       ]
     },
     "System.Data.Common/4.3.0": {
-      "sha512": "OGX4ifHI67s/2KRrXGMmEjmszCptbhWS4BieBdiBPl/8pn0A1xPMx0Gn0dKK0zKtEaelYNh5M7M5lCZL0EA4eA==",
+      "sha512": "lm6E3T5u7BOuEH0u18JpbJHxBfOJPuCyl4Kg1RH10ktYLp5uEEE1xKrHW56/We4SnZpGAuCc9N0MJpSDhTHZGQ==",
       "type": "package",
       "path": "system.data.common/4.3.0",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
@@ -551,10 +557,11 @@
       ]
     },
     "System.Globalization/4.3.0": {
-      "sha512": "Gp7Z/4kR92caisVDNbXXYdGYZuAECXZGIaG7kAOs3cEM3zVMp078Yn3qVRGzUidYSYEAauQ0hx7mbXEmuimhYA==",
+      "sha512": "kYdVd2f2PAdFGblzFswE4hkNANJBKRmsfa2X5LG2AcWE1c7/4t0pYae1L8vfZ5xvE2nK/R9JprtToA61OSHWIg==",
       "type": "package",
       "path": "system.globalization/4.3.0",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
@@ -618,10 +625,11 @@
       ]
     },
     "System.IO/4.3.0": {
-      "sha512": "Ep3xyKDltu0EsCk1BvoWBC7NltwFqRlYCjwKTV7+d4sAH0lVk5P3Q2XydNm6dYxUJZdUgmBLf52F3pAwzKIJBg==",
+      "sha512": "3qjaHvxQPDpSOYICjUoTsmoq5u6QJAFRUITgeT/4gqkF1bajbSmb1kwSxEA8AHlofqgcKJcM8udgieRNhaJ5Cg==",
       "type": "package",
       "path": "system.io/4.3.0",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
@@ -698,10 +706,11 @@
       ]
     },
     "System.Reflection/4.3.0": {
-      "sha512": "DyOo4oJzP4JDP+GmJmZRTUoMN1T7MDlQLCgptPKJ5oB9AhRZ/RDIhAw0XrLAC6BpBxSPWk+fv6rMzfZcYPIjyQ==",
+      "sha512": "KMiAFoW7MfJGa9nDFNcfu+FpEdiHpWgTcS2HdMpDvt9saK3y/G4GwprPyzqjFH9NTaGPQeWNHU+iDlDILj96aQ==",
       "type": "package",
       "path": "system.reflection/4.3.0",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
@@ -778,10 +787,11 @@
       ]
     },
     "System.Reflection.Primitives/4.3.0": {
-      "sha512": "6j+W57PZnjErWr1OBi7ORmwBBLycDB4N9aEOBKHAHXF/9sLOA30IQkqyOWGUUbQUgjHZwuZSVtgaUzW8wIbFTg==",
+      "sha512": "5RXItQz5As4xN2/YUDxdpsEkMhvw3e6aNveFXUn4Hl/udNTCNhnKp8lT9fnc3MhvGKh1baak5CovpuQUXHAlIA==",
       "type": "package",
       "path": "system.reflection.primitives/4.3.0",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
@@ -834,10 +844,11 @@
       ]
     },
     "System.Resources.ResourceManager/4.3.0": {
-      "sha512": "u8AA+wa4EtOtkOf7OqxYryXnZ2zwv83qP1Dfnv3ZoA1k9Gx0HR/ERccyc1/HBpjbIdrcsyTVHivNQSYlGwGT8A==",
+      "sha512": "/zrcPkkWdZmI4F92gL/TPumP98AVDu/Wxr3CSJGQQ+XN6wbRZcyfSKVoPo17ilb3iOr0cCRqJInGwNMolqhS8A==",
       "type": "package",
       "path": "system.resources.resourcemanager/4.3.0",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
@@ -890,10 +901,11 @@
       ]
     },
     "System.Runtime/4.3.0": {
-      "sha512": "wLlTiM4b/Un90BM6s3voqYybZEGra4WiIaXfTeB9kVPZr6QDP97xjG+rZYzdP2jiuQnij1bA8q4PzmrY6l5QTw==",
+      "sha512": "JufQi0vPQ0xGnAczR13AUFglDyVYt4Kqnz1AZaiKZ5+GICq0/1MH/mO/eAJHt/mHW1zjKBJd7kV26SrxddAhiw==",
       "type": "package",
       "path": "system.runtime/4.3.0",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
@@ -981,10 +993,11 @@
       ]
     },
     "System.Runtime.Extensions/4.3.0": {
-      "sha512": "Xz+DgcN+a9LcFJJ9uir7Za7hAye4Hon6CxufXiVkfoQ9IQLn1w0NGr7kuwosXFJ892JA8zNTx7QWjRc9qrmN3w==",
+      "sha512": "guW0uK0fn5fcJJ1tJVXYd7/1h5F+pea1r7FLSOz/f8vPEqbR2ZAknuRDvTQ8PzAilDveOxNjSfr0CHfIQfFk8g==",
       "type": "package",
       "path": "system.runtime.extensions/4.3.0",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
@@ -1061,10 +1074,11 @@
       ]
     },
     "System.Text.Encoding/4.3.0": {
-      "sha512": "U564F0gK8wI5A+SXUg99g/sxG9Fgynj90qgtUzMcK8wDF6iAktFXpZfY9cETcz3NKvKR/rQpyhstguPcAA2lUA==",
+      "sha512": "BiIg+KWaSDOITze6jGQynxg64naAPtqGHBwDrLaCtixsa5bKiR8dpPOHA7ge3C0JJQizJE+sfkz1wV+BAKAYZw==",
       "type": "package",
       "path": "system.text.encoding/4.3.0",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
@@ -1128,10 +1142,11 @@
       ]
     },
     "System.Text.RegularExpressions/4.3.0": {
-      "sha512": "R3r6OE8Nl3SHl0lX7gQhFd1qvzEiIf5+gcf2vs/JAXG7kSl8l03HB2Jbyp/6JQ6rsv9XW47qCH8Nnc2kew4P4g==",
+      "sha512": "RpT2DA+L660cBt1FssIE9CAGpLFdFPuheB7pLpKpn6ZXNby7jDERe8Ua/Ne2xGiwLVG2JOqziiaVCGDon5sKFA==",
       "type": "package",
       "path": "system.text.regularexpressions/4.3.0",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
@@ -1211,10 +1226,11 @@
       ]
     },
     "System.Threading/4.3.0": {
-      "sha512": "4j+rHu0q/NVTrCrtwVeVy1WXpzMTB+V63DG2pI2aopEurxLtjYxqYFB0RQRahClkAzonmF7rTTPLnAGRfbV37w==",
+      "sha512": "VkUS0kOBcUf3Wwm0TSbrevDDZ6BlM+b/HRiapRFWjM5O0NS0LviG0glKmFK+hhPDd1XFeSdU1GmlLhb2CoVpIw==",
       "type": "package",
       "path": "system.threading/4.3.0",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
@@ -1281,10 +1297,11 @@
       ]
     },
     "System.Threading.Tasks/4.3.0": {
-      "sha512": "E3rywGOEzJJvjVzTIZHYWYIja/zs9UTq3hEuUAyBc1Y4fYKG4013HRD9Y2JymL7eHUfaujLhh8UM4yeTnAwZCQ==",
+      "sha512": "LbSxKEdOUhVe8BezB/9uOGGppt+nZf6e1VFyw6v3DN6lqitm0OSn2uXMOdtP0M3W4iMcqcivm2J6UgqiwwnXiA==",
       "type": "package",
       "path": "system.threading.tasks/4.3.0",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
@@ -1351,7 +1368,7 @@
   "projectFileDependencyGroups": {
     ".NETStandard,Version=v2.0": [
       "Microsoft.Data.Sqlite >= 1.1.1",
-      "NETStandard.Library >= 2.0.1"
+      "NETStandard.Library >= 2.0.3"
     ]
   },
   "packageFolders": {
@@ -1402,7 +1419,7 @@
           "NETStandard.Library": {
             "suppressParent": "All",
             "target": "Package",
-            "version": "[2.0.1, )",
+            "version": "[2.0.3, )",
             "autoReferenced": true
           }
         },

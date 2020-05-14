@@ -447,6 +447,80 @@ namespace Porganizer
         private StorageFile screen;
         private BitmapImage thumbnail;
         private BitmapImage gif;
+
+        public VideoFile()
+        {
+
+        }
+
+        public VideoFile(StorageFile inputFile)
+        {
+            file = inputFile;
+
+            GetThumbnail();
+            FindScreens();
+            FindGif();
+        }
+
+        private async void GetThumbnail()
+        {
+            BitmapImage image = new BitmapImage();
+
+            var temp = await file.GetThumbnailAsync(ThumbnailMode.VideosView);
+            if (temp != null)
+            {
+                await image.SetSourceAsync(temp);
+                Thumbnail = image;
+            }
+        }
+
+        private async void FindScreens()
+        {
+            List<string> fileTypeFilter = new List<string>
+            {
+                ".jpg"
+            };
+
+            var queryOptions = new QueryOptions(CommonFileQuery.DefaultQuery, fileTypeFilter)
+            {
+                ApplicationSearchFilter = "System.FileName:*\"" + Path.GetFileNameWithoutExtension(File.Name) + "\"*"
+            };
+
+            StorageFolder folder = await File.GetParentAsync();
+            StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(queryOptions);
+
+            var files = await queryResult.GetFilesAsync();
+            if (files.Count > 0)
+            {
+                Screen = files[0];
+            }
+        }
+
+        private async void FindGif()
+        {
+            List<string> fileTypeFilter = new List<string>
+            {
+                ".gif"
+            };
+
+            var queryOptions = new QueryOptions(CommonFileQuery.DefaultQuery, fileTypeFilter)
+            {
+                ApplicationSearchFilter = "System.FileName:*\"" + Path.GetFileNameWithoutExtension(File.Name) + "\"*"
+            };
+
+            StorageFolder folder = await File.GetParentAsync();
+            StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(queryOptions);
+
+            var files = await queryResult.GetFilesAsync();
+            if (files.Count > 0)
+            {
+                IRandomAccessStream fileStream = await files[0].OpenAsync(FileAccessMode.Read);
+                BitmapImage image = new BitmapImage();
+                image.SetSource(fileStream);
+                Gif = image;
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
         public StorageFile File
         {
@@ -501,8 +575,5 @@ namespace Porganizer
             // Raise the PropertyChanged event, passing the name of the property whose value has changed.
             PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
-
     }
-
-
 }
