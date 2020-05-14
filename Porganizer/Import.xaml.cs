@@ -34,6 +34,7 @@ namespace Porganizer
         };
 
         public ObservableCollection<VideoFile> thumbFileList = new ObservableCollection<VideoFile>();
+        List<string> paths = new List<string>();
 
         public Import()
         {
@@ -57,7 +58,11 @@ namespace Porganizer
                         // If it is video
                         if (fileTypeFilter.Contains(file.FileType))
                         {
-                            thumbFileList.Add(new VideoFile(file));
+                            if (!paths.Contains(file.Path))
+                            {
+                                thumbFileList.Add(new VideoFile(file));
+                                paths.Add(file.Path);
+                            }
                         }
                     }
                 }
@@ -73,6 +78,7 @@ namespace Porganizer
         private void ClearList(object sender, TappedRoutedEventArgs e)
         {
             thumbFileList.Clear();
+            paths.Clear();
         }
     }
 }
