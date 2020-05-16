@@ -12,25 +12,18 @@ using Windows.Storage.Search;
 using Windows.Storage.FileProperties;
 
 using System.Diagnostics;
-using System.ComponentModel;
 using System.Threading.Tasks;
-using System.Runtime.CompilerServices;
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using System.IO;
-using System.Security.Cryptography;
 
 using DataAccessLibrary;
-using Windows.Security.Cryptography.Core;
-using Windows.Security.Cryptography;
-using Windows.Storage.Streams;
-using Windows.Foundation;
 
 namespace Porganizer
 {
     public sealed partial class Library : Page
     {
-        public ObservableCollection<VideoFile> thumbFileList = new ObservableCollection<VideoFile>();
+        public ObservableCollection<VideoFile> displayedFileList = new ObservableCollection<VideoFile>();
         VideoFile rightClickedFile;
         VideoFile selectedFile;
         int selectedIndex;
@@ -64,7 +57,7 @@ namespace Porganizer
             foreach (DatabaseVideoFile videoFile in databaseVideoFiles)
             {
                 StorageFile file = await StorageFile.GetFileFromPathAsync(videoFile.path);
-                thumbFileList.Add(new VideoFile(file));
+                displayedFileList.Add(new VideoFile(file));
             }
         }
 
@@ -111,7 +104,7 @@ namespace Porganizer
             if (selectedFolder != null)
             {
                 // Clear old files.
-                thumbFileList.Clear();
+                displayedFileList.Clear();
 
                 AddLog("Loading files...");
                 // Application now has read/write access to all contents in the picked folder (including other sub-folder contents).
@@ -134,7 +127,7 @@ namespace Porganizer
                 foreach (StorageFile file in fileList)
                 {
                     // thumbFileList.Add(new VideoFile { File = file, Thumbnail = image });
-                    thumbFileList.Add(new VideoFile(file));
+                    displayedFileList.Add(new VideoFile(file));
                 }
             }
         }
@@ -262,6 +255,12 @@ namespace Porganizer
             {
                 pointedFile.DisplayedImage = pointedFile.Thumbnail;
             }
+        }
+
+        private async void ReloadDatabase(object sender, RoutedEventArgs e)
+        {
+            displayedFileList.Clear();
+            await LoadFromDatabase();
         }
     }
 }

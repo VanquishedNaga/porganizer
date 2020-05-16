@@ -1,39 +1,18 @@
-﻿using System;
+﻿using DataAccessLibrary;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace Porganizer
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class Import : Page
     {
-        List<string> fileTypeFilter = new List<string>
-        {
-            ".mp4",
-            ".wmv",
-            ".mkv",
-            ".avi"
-        };
-
-        public ObservableCollection<VideoFile> thumbFileList = new ObservableCollection<VideoFile>();
+        public ObservableCollection<VideoFile> importingList = new ObservableCollection<VideoFile>();
         List<string> paths = new List<string>();
 
         public Import()
@@ -56,11 +35,11 @@ namespace Porganizer
                     foreach (StorageFile file in items)
                     {
                         // If it is video
-                        if (fileTypeFilter.Contains(file.FileType))
+                        if (VideoFile.IsSupportedVideoType(file))
                         {
                             if (!paths.Contains(file.Path))
                             {
-                                thumbFileList.Add(new VideoFile(file));
+                                importingList.Add(new VideoFile(file));
                                 paths.Add(file.Path);
                             }
                         }
@@ -77,8 +56,24 @@ namespace Porganizer
 
         private void ClearList(object sender, TappedRoutedEventArgs e)
         {
-            thumbFileList.Clear();
+            importingList.Clear();
             paths.Clear();
         }
+
+        private void ImportToDatabase(object sender, TappedRoutedEventArgs e)
+        {
+            StatusText.Text = "Importing " + importingList.Count + " files.";
+
+            Progress.Value = 0;
+            Progress.Maximum = importingList.Count;
+
+            foreach (VideoFile file in importingList)
+            {
+                DataAccess.AddFile(file.File.Path);
+                Progress.Value++;
+            }
+
+            StatusText.Text = "Imported " + importingList.Count + " files.";
+        }        
     }
 }

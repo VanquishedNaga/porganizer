@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.Data.Sqlite;
 
 namespace DataAccessLibrary
@@ -8,8 +9,7 @@ namespace DataAccessLibrary
     {
         public static void InitializeDatabase()
         {
-            using (SqliteConnection db =
-                new SqliteConnection("Filename=sqliteSample.db"))
+            using (SqliteConnection db = new SqliteConnection("Filename=sqliteSample.db"))
             {
                 db.Open();
 
@@ -20,35 +20,62 @@ namespace DataAccessLibrary
                 SqliteCommand createTable = new SqliteCommand(tableCommand, db);
 
                 createTable.ExecuteReader();
-            }
-        }
-
-        public static void AddData(string inputText)
-        {
-            using (SqliteConnection db =
-                new SqliteConnection("Filename=sqliteSample.db"))
-            {
-                db.Open();
-
-                SqliteCommand insertCommand = new SqliteCommand();
-                insertCommand.Connection = db;
-
-                // Use parameterized query to prevent SQL injection attacks
-                insertCommand.CommandText = "INSERT INTO MyTable VALUES (NULL, @Entry);";
-                insertCommand.Parameters.AddWithValue("@Entry", inputText);
-
-                insertCommand.ExecuteReader();
 
                 db.Close();
             }
+        }
+
+        public static void AddFile(string path)
+        {
+            if (!IsInDatabase(path))
+            {
+                using (SqliteConnection db = new SqliteConnection("Filename=sqliteSample.db"))
+                {
+                    db.Open();
+
+                    SqliteCommand insertCommand = new SqliteCommand();
+                    insertCommand.Connection = db;
+
+                    // Use parameterized query to prevent SQL injection attacks
+                    insertCommand.CommandText = "INSERT INTO MyTable VALUES (NULL, @Entry);";
+                    insertCommand.Parameters.AddWithValue("@Entry", path);
+
+                    insertCommand.ExecuteReader();
+
+                    db.Close();
+                }
+            }
+        }
+
+        public static bool IsInDatabase(string path)
+        {
+            bool isInDatabase = false;
+
+            using (SqliteConnection db = new SqliteConnection("Filename=sqliteSample.db"))
+            {
+                db.Open();
+
+                using (SqliteCommand selectCommand = new SqliteCommand("SELECT EXISTS(SELECT 1 FROM MyTable WHERE Text_Entry=\"" + path + "\")", db))
+                {
+                    // Investigate why this does not work.
+                    //selectCommand.Parameters.AddWithValue("@Path", path);
+
+                    using (SqliteDataReader query = selectCommand.ExecuteReader())
+                    {
+                        query.Read();
+                        isInDatabase = query.GetBoolean(0);
+                    }
+                }
+            }
+
+            return isInDatabase;
         }
 
         public static List<String> GetData()
         {
             List<String> entries = new List<string>();
 
-            using (SqliteConnection db =
-                new SqliteConnection("Filename=sqliteSample.db"))
+            using (SqliteConnection db = new SqliteConnection("Filename=sqliteSample.db"))
             {
                 db.Open();
 
@@ -72,8 +99,7 @@ namespace DataAccessLibrary
         {
             List<DatabaseVideoFile> entries = new List<DatabaseVideoFile>();
 
-            using (SqliteConnection db =
-                new SqliteConnection("Filename=sqliteSample.db"))
+            using (SqliteConnection db = new SqliteConnection("Filename=sqliteSample.db"))
             {
                 db.Open();
 

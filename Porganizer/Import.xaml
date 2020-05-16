@@ -17,6 +17,7 @@
 
         <CommandBar DefaultLabelPosition="Right">
             <AppBarSeparator HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
+            <AppBarButton Icon="ImportAll" Label="Import to Database" Tapped="ImportToDatabase"/>
             <AppBarButton Icon="Clear" Label="Clear" Tapped="ClearList"/>
             <AppBarButton Icon="OpenFile" Label="Add Folder"/>
             <AppBarButton Icon="Folder" Label="Recent Folders"/>
@@ -34,7 +35,7 @@
 
         <SplitView IsPaneOpen="True" DisplayMode="Inline" OpenPaneLength="1100" Grid.Row="1">
             <SplitView.Pane>
-                <ListView x:Name="listView1" Padding="20" HorizontalAlignment="Stretch" ItemsSource="{x:Bind thumbFileList, Mode=OneWay}" 
+                <ListView x:Name="listView1" Padding="20" HorizontalAlignment="Stretch" ItemsSource="{x:Bind importingList, Mode=OneWay}" 
                           AllowDrop="True" DragOver="Grid_DragOver" Drop="Grid_Drop">
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="local:VideoFile">

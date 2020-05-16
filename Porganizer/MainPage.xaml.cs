@@ -56,7 +56,7 @@ namespace Porganizer
 
         private void AddData(object sender, RoutedEventArgs e)
         {
-            DataAccess.AddData(Input_Box.Text);
+            DataAccess.AddFile(Input_Box.Text);
 
             Output.ItemsSource = DataAccess.GetData();
         }
@@ -443,6 +443,27 @@ namespace Porganizer
 
     public class VideoFile : INotifyPropertyChanged
     {
+        private static List<string> supportedVideoTypes = new List<string>
+        {
+            ".avi",
+            ".mkv",
+            ".mov",
+            ".mp4",
+            ".wmv",
+        };
+
+        public static bool IsSupportedVideoType(StorageFile file)
+        {
+            bool isVideo = false;
+
+            if (supportedVideoTypes.Contains(file.FileType))
+            {
+                isVideo = true;
+            }
+
+            return isVideo;
+        }
+
         private StorageFile file;
         private StorageFile screen;
         private BitmapImage thumbnail;
