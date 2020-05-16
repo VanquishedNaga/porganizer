@@ -243,5 +243,25 @@ namespace Porganizer
         {
             DebugOutput.Text = log + '\n' + DebugOutput.Text;
         }
+
+        private void DisplayGif(object sender, PointerRoutedEventArgs e)
+        {
+            VideoFile pointedFile = ((FrameworkElement)e.OriginalSource).DataContext as VideoFile;
+
+            if ((pointedFile != null) && (pointedFile.Gif != null))
+            {
+                pointedFile.DisplayedImage = pointedFile.Gif;
+            }
+        }
+
+        private void DisplayThumbnail(object sender, PointerRoutedEventArgs e)
+        {
+            VideoFile pointedFile = ((FrameworkElement)e.OriginalSource).DataContext as VideoFile;
+
+            if ((pointedFile != null) && (pointedFile.Thumbnail != null))
+            {
+                pointedFile.DisplayedImage = pointedFile.Thumbnail;
+            }
+        }
     }
 }

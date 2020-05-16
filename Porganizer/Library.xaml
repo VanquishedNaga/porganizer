@@ -49,8 +49,8 @@
                 <GridView x:Name="gridView1" ItemsSource="{x:Bind thumbFileList, Mode=OneWay}" SelectionChanged="SelectionChanged">
                     <GridView.ItemTemplate>
                         <DataTemplate x:DataType="local:VideoFile">
-                            <StackPanel Width="190" Margin="12">
-                                <Image Width="190" Height="130"  Stretch="Uniform" Source="{x:Bind Thumbnail, Mode=OneWay}"/>
+                            <StackPanel Width="190" Margin="12" PointerEntered="DisplayGif" PointerExited="DisplayThumbnail">
+                                <Image Width="190" Height="130"  Stretch="Uniform" Source="{x:Bind DisplayedImage, Mode=OneWay}"/>
                                 <StackPanel Margin="0,12">
                                     <TextBlock Text="{x:Bind File.Name}"/>
                                 </StackPanel>

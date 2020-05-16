@@ -471,6 +471,7 @@ namespace Porganizer
             {
                 await image.SetSourceAsync(temp);
                 Thumbnail = image;
+                DisplayedImage = image;
             }
         }
 
@@ -570,6 +571,21 @@ namespace Porganizer
                 this.OnPropertyChanged();
             }
         }
+
+        private BitmapImage displayedImage;
+        public BitmapImage DisplayedImage
+        {
+            get
+            {
+                return this.displayedImage;
+            }
+            set
+            {
+                this.displayedImage = value;
+                this.OnPropertyChanged();
+            }
+        }
+
         public void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             // Raise the PropertyChanged event, passing the name of the property whose value has changed.
