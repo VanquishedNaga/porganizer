@@ -607,6 +607,20 @@ namespace Porganizer
             }
         }
 
+        private BitmapImage screenImage;
+        public BitmapImage ScreenImage
+        {
+            get
+            {
+                return this.screenImage;
+            }
+            set
+            {
+                this.screenImage = value;
+                this.OnPropertyChanged();
+            }
+        }
+
         public void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             // Raise the PropertyChanged event, passing the name of the property whose value has changed.

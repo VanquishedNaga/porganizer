@@ -47,6 +47,17 @@ namespace DataAccessLibrary
             }
         }
 
+        public static void RemoveFileFromDatabase(string path)
+        {
+            using (SqliteConnection db = new SqliteConnection("Filename=sqliteSample.db"))
+            {
+                db.Open();
+
+                SqliteCommand deleteCommand = new SqliteCommand("DELETE FROM MyTable WHERE Text_Entry=\"" + path + "\"", db);
+                deleteCommand.ExecuteReader();
+            }
+        }
+
         public static bool IsInDatabase(string path)
         {
             bool isInDatabase = false;

@@ -19,17 +19,18 @@
 
         <CommandBar DefaultLabelPosition="Right">
             <AppBarSeparator HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
-            <AppBarButton Icon="Refresh" Label="Reload Database" Click="ReloadDatabase" />
-            <AppBarButton Icon="OpenFile" Label="Add Folder" Click="AddFolder" />
+            <AppBarButton Icon="Refresh" Label="Reload Database" Tapped="ReloadDatabase" />
+            <AppBarButton Icon="OpenFile" Label="Add Folder" Tapped="AddFolder" />
             <AppBarButton Icon="Folder" Label="Recent Folders"/>
+            <AppBarSeparator HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
+            <AppBarButton Icon="Delete" Label="Delete" Tapped="DeleteFile"/>
             <CommandBar.Content>
-                <StackPanel Orientation="Horizontal" Padding="5" VerticalAlignment="Stretch">
+                <StackPanel Orientation="Horizontal" Padding="4" VerticalAlignment="Stretch">
                     <ProgressBar x:Name="Progress" IsIndeterminate="False" Maximum="100" HorizontalAlignment="Left" VerticalAlignment="Center" Width="200"/>
                     <AppBarSeparator HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
-                    <TextBlock x:Name="TextFileNum" Margin="20,10"/>
+                    <TextBlock x:Name="TextFileNum" Margin="12"/>
                     <AppBarSeparator HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
-                    <TextBlock x:Name="StatusText" Text="Status" Margin="20,10"/>
-
+                    <TextBlock x:Name="StatusText" Text="Status" Margin="12"/>
                 </StackPanel>
             </CommandBar.Content>
         </CommandBar>
@@ -80,9 +81,9 @@
                 </GridView>
             </SplitView.Pane>
 
-            <StackPanel>
+            <StackPanel DataContext="{Binding SelectedItem, ElementName=gridView1}">
                 <Image x:Name="bitmap" Height="200" HorizontalAlignment="Stretch" Margin="12"/>
-                <Image x:Name="ImgScreenshot" Height="200" HorizontalAlignment="Stretch" Tapped="Screens_Clicked" Margin="12"/>
+                <Image x:Name="ImgScreenshot" Height="200" HorizontalAlignment="Stretch" Tapped="Screens_Clicked" Margin="12" Source="{Binding ScreenImage}"/>
                 <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="12">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>

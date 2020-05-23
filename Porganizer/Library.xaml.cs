@@ -18,6 +18,7 @@ using System.Text.RegularExpressions;
 using System.IO;
 
 using DataAccessLibrary;
+using Windows.Storage.Streams;
 
 namespace Porganizer
 {
@@ -164,6 +165,7 @@ namespace Porganizer
                 TextFileSize.Text = ((await temp.File.GetBasicPropertiesAsync()).Size / 1024 / 1024).ToString() + " MB";
                 TextFileLength.Text = (await temp.File.Properties.GetVideoPropertiesAsync()).Duration.Minutes.ToString() + " min";
 
+                // Always display GIF in details view.
                 if (temp.Gif != null)
                 {
                     bitmap.Source = temp.Gif;
@@ -174,17 +176,12 @@ namespace Porganizer
                 }
 
                 // Set screenshot image.
-                if (temp.Screen != null)
+                if ((selectedFile.Screen != null) && (selectedFile.ScreenImage == null))
                 {
-                    BitmapImage screen = new BitmapImage();
-                    screen.SetSource(await temp.Screen.GetThumbnailAsync(ThumbnailMode.SingleItem));
-                    ImgScreenshot.Source = screen;
-                    AddLog("Screens.");
-                }
-                else
-                {
-                    ImgScreenshot.Source = null;
-                    AddLog("No screens.");
+                    IRandomAccessStream fileStream = await selectedFile.Screen.OpenAsync(FileAccessMode.Read);
+                    BitmapImage image = new BitmapImage();
+                    image.SetSource(fileStream);
+                    selectedFile.ScreenImage = image;
                 }
 
                 Match series = Regex.Match(Path.GetFileNameWithoutExtension(temp.File.Name), @"^\[(.+?)\]\s*(.+?)\s*\((.+?)\)$");
@@ -239,9 +236,7 @@ namespace Porganizer
 
         private void DisplayGif(object sender, PointerRoutedEventArgs e)
         {
-            VideoFile pointedFile = ((FrameworkElement)e.OriginalSource).DataContext as VideoFile;
-
-            if ((pointedFile != null) && (pointedFile.Gif != null))
+            if ((((FrameworkElement)e.OriginalSource).DataContext is VideoFile pointedFile) && (pointedFile.Gif != null))
             {
                 pointedFile.DisplayedImage = pointedFile.Gif;
             }
@@ -249,9 +244,7 @@ namespace Porganizer
 
         private void DisplayThumbnail(object sender, PointerRoutedEventArgs e)
         {
-            VideoFile pointedFile = ((FrameworkElement)e.OriginalSource).DataContext as VideoFile;
-
-            if ((pointedFile != null) && (pointedFile.Thumbnail != null))
+            if ((((FrameworkElement)e.OriginalSource).DataContext is VideoFile pointedFile) && (pointedFile.Thumbnail != null))
             {
                 pointedFile.DisplayedImage = pointedFile.Thumbnail;
             }
@@ -261,6 +254,16 @@ namespace Porganizer
         {
             displayedFileList.Clear();
             await LoadFromDatabase();
+        }
+
+        private void DeleteFile(object sender, RoutedEventArgs e)
+        {
+            if (selectedFile != null)
+            {
+                StatusText.Text = "Deleting " + selectedFile.File.Name + "...";
+                DataAccess.RemoveFileFromDatabase(selectedFile.File.Path);
+                StatusText.Text = "Deleted " + selectedFile.File.Name + ".";
+            }
         }
     }
 }
