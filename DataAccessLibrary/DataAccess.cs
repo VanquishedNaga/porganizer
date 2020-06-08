@@ -13,6 +13,52 @@ namespace DataAccessLibrary
             {
                 db.Open();
 
+                String tableCommand =
+                    "CREATE TABLE IF NOT EXISTS SERIES (" +
+                    "   SeriesId        INTEGER         PRIMARY KEY, " +
+                    "   Name            NVARCHAR(50)    NOT NULL        UNIQUE" +
+                    ");" +
+                    "CREATE TABLE IF NOT EXISTS FILE (" +
+                    "   FileId          INTEGER         PRIMARY KEY, " +
+                    "   Path            NVARCHAR(2048)  NOT NULL        UNIQUE," +
+                    "   Size            INTEGER," +
+                    "   Ranking         INTEGER," +
+                    "   ReleaseDate     DATE," +
+                    "   ImportDate      DATE            NOT NULL," +
+                    "   SeriesId        INTEGER," +
+                    "   CONSTRAINT SeriFK FOREIGN KEY (SeriesId)" +
+                    "       REFERENCES SERIES (SeriesId)" +
+                    ");" +
+                    "CREATE TABLE IF NOT EXISTS PERFORMER (" +
+                    "   PerformerId     INTEGER         PRIMARY KEY, " +
+                    "   Name            NVARCHAR(50)    NOT NULL        UNIQUE," +
+                    "   DateOfBirth     INTEGER," +
+                    "   Ranking         INTEGER" +
+                    ");" +
+                    "CREATE TABLE IF NOT EXISTS PERFOMANCE (" +
+                    "   FileId          INTEGER," +
+                    "   PerformerId     INTEGER," +
+                    "   CONSTRAINT FileFK FOREIGN KEY (FileId)" +
+                    "       REFERENCES FILE (FileId)," +
+                    "   CONSTRAINT PerfFK FOREIGN KEY (PerformerId)" +
+                    "       REFERENCES PERFORMER (PerformerId)," +
+                    "   UNIQUE (FileId, PerformerId)" +
+                    ");";
+
+                SqliteCommand createTable = new SqliteCommand(tableCommand, db);
+
+                createTable.ExecuteReader();
+
+                db.Close();
+            }
+        }
+
+        public static void InitializeDatabaseOld()
+        {
+            using (SqliteConnection db = new SqliteConnection("Filename=sqliteSample.db"))
+            {
+                db.Open();
+
                 String tableCommand = "CREATE TABLE IF NOT " +
                     "EXISTS MyTable (Primary_Key INTEGER PRIMARY KEY, " +
                     "Text_Entry NVARCHAR(2048) NULL)";
