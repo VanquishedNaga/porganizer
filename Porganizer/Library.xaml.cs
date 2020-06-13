@@ -42,11 +42,10 @@ namespace Porganizer
         {
             this.InitializeComponent();
             AddLog("Ready.");
-            Initialization = LoadFolderFromPreviousSession();
 
             DataAccess.InitializeDatabase();
-
-            // Initialization = LoadFromDatabase();
+            Initialization = LoadFromDatabase();
+            //Initialization = LoadFolderFromPreviousSession();
         }
 
         // Get video files from database.

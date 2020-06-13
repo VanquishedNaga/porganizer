@@ -54,13 +54,6 @@ namespace Porganizer
             DataAccess.InitializeDatabase();
         }
 
-        private void AddData(object sender, RoutedEventArgs e)
-        {
-            DataAccess.AddFile(Input_Box.Text);
-
-            Output.ItemsSource = DataAccess.GetData();
-        }
-
         private async Task LoadFolderFromPreviousSession()
         {
             // Load folder from previous session if available.

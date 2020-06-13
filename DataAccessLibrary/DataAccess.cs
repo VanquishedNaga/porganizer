@@ -21,10 +21,10 @@ namespace DataAccessLibrary
                     "CREATE TABLE IF NOT EXISTS FILE (" +
                     "   FileId          INTEGER         PRIMARY KEY, " +
                     "   Path            NVARCHAR(2048)  NOT NULL        UNIQUE," +
-                    "   Size            INTEGER," +
+                    "   ImportDate      DATE            NOT NULL," +
+                    "   Size            INTEGER         NOT NULL," +
                     "   Ranking         INTEGER," +
                     "   ReleaseDate     DATE," +
-                    "   ImportDate      DATE            NOT NULL," +
                     "   SeriesId        INTEGER," +
                     "   CONSTRAINT SeriFK FOREIGN KEY (SeriesId)" +
                     "       REFERENCES SERIES (SeriesId)" +
@@ -53,25 +53,7 @@ namespace DataAccessLibrary
             }
         }
 
-        public static void InitializeDatabaseOld()
-        {
-            using (SqliteConnection db = new SqliteConnection("Filename=sqliteSample.db"))
-            {
-                db.Open();
-
-                String tableCommand = "CREATE TABLE IF NOT " +
-                    "EXISTS MyTable (Primary_Key INTEGER PRIMARY KEY, " +
-                    "Text_Entry NVARCHAR(2048) NULL)";
-
-                SqliteCommand createTable = new SqliteCommand(tableCommand, db);
-
-                createTable.ExecuteReader();
-
-                db.Close();
-            }
-        }
-
-        public static void AddFile(string path)
+        public static void AddFile(string path, int size)
         {
             if (!IsInDatabase(path))
             {
@@ -83,8 +65,11 @@ namespace DataAccessLibrary
                     insertCommand.Connection = db;
 
                     // Use parameterized query to prevent SQL injection attacks
-                    insertCommand.CommandText = "INSERT INTO MyTable VALUES (NULL, @Entry);";
-                    insertCommand.Parameters.AddWithValue("@Entry", path);
+                    insertCommand.CommandText = 
+                        "INSERT INTO FILE (Path, ImportDate, Size)" +
+                        "   VALUES (@Path, CURRENT_DATE, @Size);";
+                    insertCommand.Parameters.AddWithValue("@Path", path);
+                    insertCommand.Parameters.AddWithValue("@Size", size);
 
                     insertCommand.ExecuteReader();
 
@@ -99,7 +84,7 @@ namespace DataAccessLibrary
             {
                 db.Open();
 
-                SqliteCommand deleteCommand = new SqliteCommand("DELETE FROM MyTable WHERE Text_Entry=\"" + path + "\"", db);
+                SqliteCommand deleteCommand = new SqliteCommand("DELETE FROM FILE WHERE Path=\"" + path + "\"", db);
                 deleteCommand.ExecuteReader();
             }
         }
@@ -112,7 +97,7 @@ namespace DataAccessLibrary
             {
                 db.Open();
 
-                using (SqliteCommand selectCommand = new SqliteCommand("SELECT EXISTS(SELECT 1 FROM MyTable WHERE Text_Entry=\"" + path + "\")", db))
+                using (SqliteCommand selectCommand = new SqliteCommand("SELECT EXISTS(SELECT 1 FROM FILE WHERE Path=\"" + path + "\")", db))
                 {
                     // Investigate why this does not work.
                     //selectCommand.Parameters.AddWithValue("@Path", path);
@@ -137,7 +122,7 @@ namespace DataAccessLibrary
                 db.Open();
 
                 SqliteCommand selectCommand = new SqliteCommand
-                    ("SELECT Text_Entry from MyTable", db);
+                    ("SELECT Path from FILE", db);
 
                 SqliteDataReader query = selectCommand.ExecuteReader();
 
@@ -161,7 +146,7 @@ namespace DataAccessLibrary
                 db.Open();
 
                 SqliteCommand selectCommand = new SqliteCommand
-                    ("SELECT Text_Entry from MyTable", db);
+                    ("SELECT Path from FILE", db);
 
                 SqliteDataReader query = selectCommand.ExecuteReader();
 

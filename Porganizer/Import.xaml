@@ -17,7 +17,7 @@
 
         <CommandBar DefaultLabelPosition="Right">
             <AppBarSeparator HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
-            <AppBarButton Icon="ImportAll" Label="Import to Database" Tapped="ImportToDatabase"/>
+            <AppBarButton Icon="ImportAll" Label="Import to Database" Tapped="ImportToDatabaseAsync"/>
             <AppBarButton Icon="Clear" Label="Clear" Tapped="ClearList"/>
             <AppBarButton Icon="OpenFile" Label="Add Folder"/>
             <AppBarButton Icon="Folder" Label="Recent Folders"/>

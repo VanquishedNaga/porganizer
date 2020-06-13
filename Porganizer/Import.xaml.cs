@@ -60,7 +60,7 @@ namespace Porganizer
             paths.Clear();
         }
 
-        private void ImportToDatabase(object sender, TappedRoutedEventArgs e)
+        private async void ImportToDatabaseAsync(object sender, TappedRoutedEventArgs e)
         {
             StatusText.Text = "Importing " + importingList.Count + " files.";
 
@@ -69,7 +69,7 @@ namespace Porganizer
 
             foreach (VideoFile file in importingList)
             {
-                DataAccess.AddFile(file.File.Path);
+                DataAccess.AddFile(file.File.Path, (int)((await file.File.GetBasicPropertiesAsync()).Size / 1024 / 1024));
                 Progress.Value++;
             }
 
