@@ -44,12 +44,12 @@ namespace Porganizer
             AddLog("Ready.");
 
             DataAccess.InitializeDatabase();
-            Initialization = LoadFromDatabase();
+            Initialization = LoadFilesFromDatabase();
             //Initialization = LoadFolderFromPreviousSession();
         }
 
         // Get video files from database.
-        private async Task LoadFromDatabase()
+        private async Task LoadFilesFromDatabase()
         {
             databaseVideoFiles = DataAccess.GetVideoList();
             BitmapImage image = new BitmapImage(new Uri(ListThumbnailPlaceholderPath));
@@ -252,7 +252,7 @@ namespace Porganizer
         private async void ReloadDatabase(object sender, RoutedEventArgs e)
         {
             displayedFileList.Clear();
-            await LoadFromDatabase();
+            await LoadFilesFromDatabase();
         }
 
         private void DeleteFile(object sender, RoutedEventArgs e)
@@ -263,6 +263,20 @@ namespace Porganizer
                 DataAccess.RemoveFileFromDatabase(selectedFile.File.Path);
                 StatusText.Text = "Deleted " + selectedFile.File.Name + ".";
             }
+        }
+
+        private void GridView1_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            GridView gridView = (GridView)sender;
+            rightClickedFile = ((FrameworkElement)e.OriginalSource).DataContext as VideoFile;
+
+            if (rightClickedFile.Screen == null)
+            {
+                videoMenuFlyout.Items[1].Visibility = Visibility.Collapsed;
+            }
+
+            videoMenuFlyout.ShowAt(gridView, e.GetPosition(gridView));
+            AddLog(rightClickedFile.File.Name);
         }
     }
 }

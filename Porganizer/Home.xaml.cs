@@ -1,27 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace Porganizer
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class Home : Page
     {
         public Home()
@@ -40,6 +29,7 @@ namespace Porganizer
             ("Import", typeof(Import)),
             ("Library", typeof(Library)),
             ("Clips", typeof(Library)),
+            ("Performers", typeof(Performers)),
             ("Unlinked", typeof(Library)),
         };
 
@@ -146,12 +136,15 @@ namespace Porganizer
             {
                 var item = _pages.FirstOrDefault(p => p.Page == e.SourcePageType);
 
-                NavView.SelectedItem = NavView.MenuItems
-                    .OfType<NavigationViewItem>()
-                    .First(n => n.Tag.Equals(item.Tag));
+                if (!String.IsNullOrEmpty(item.Tag))
+                {
+                    NavView.SelectedItem = NavView.MenuItems
+                        .OfType<NavigationViewItem>()
+                        .First(n => n.Tag.Equals(item.Tag));
 
-                NavView.Header =
-                    ((NavigationViewItem)NavView.SelectedItem)?.Content?.ToString();
+                    NavView.Header =
+                        ((NavigationViewItem)NavView.SelectedItem)?.Content?.ToString();
+                }
             }
         }
     }

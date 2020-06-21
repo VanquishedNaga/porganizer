@@ -104,8 +104,14 @@
     <Compile Include="Library.xaml.cs">
       <DependentUpon>Library.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainPage.xaml.cs">
-      <DependentUpon>MainPage.xaml</DependentUpon>
+    <Compile Include="OldMainPage.xaml.cs">
+      <DependentUpon>OldMainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PerformerForm.xaml.cs">
+      <DependentUpon>PerformerForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Performers.xaml.cs">
+      <DependentUpon>Performers.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -181,9 +187,17 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainPage.xaml">
+    <Page Include="OldMainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="PerformerForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Performers.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

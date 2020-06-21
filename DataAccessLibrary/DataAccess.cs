@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
+using System.Runtime.CompilerServices;
 using Microsoft.Data.Sqlite;
 
 namespace DataAccessLibrary
 {
     public static class DataAccess
     {
+        // Create the database tables if they don't already exist.
         public static void InitializeDatabase()
         {
             using (SqliteConnection db = new SqliteConnection("Filename=sqliteSample.db"))
@@ -32,8 +37,10 @@ namespace DataAccessLibrary
                     "CREATE TABLE IF NOT EXISTS PERFORMER (" +
                     "   PerformerId     INTEGER         PRIMARY KEY, " +
                     "   Name            NVARCHAR(50)    NOT NULL        UNIQUE," +
-                    "   DateOfBirth     INTEGER," +
-                    "   Ranking         INTEGER" +
+                    "   DateOfBirth     DATE," +
+                    "   Ranking         INTEGER," +
+                    "   Ethnicity       NVARCHAR(25)    NOT NULL" +
+                    "       CHECK (Ethnicity IN ('JAPANESE', 'AMERICAN'))" +
                     ");" +
                     "CREATE TABLE IF NOT EXISTS PERFOMANCE (" +
                     "   FileId          INTEGER," +
@@ -55,7 +62,7 @@ namespace DataAccessLibrary
 
         public static void AddFile(string path, int size)
         {
-            if (!IsInDatabase(path))
+            if (!IsFileInDatabase(path))
             {
                 using (SqliteConnection db = new SqliteConnection("Filename=sqliteSample.db"))
                 {
@@ -65,7 +72,7 @@ namespace DataAccessLibrary
                     insertCommand.Connection = db;
 
                     // Use parameterized query to prevent SQL injection attacks
-                    insertCommand.CommandText = 
+                    insertCommand.CommandText =
                         "INSERT INTO FILE (Path, ImportDate, Size)" +
                         "   VALUES (@Path, CURRENT_DATE, @Size);";
                     insertCommand.Parameters.AddWithValue("@Path", path);
@@ -89,7 +96,7 @@ namespace DataAccessLibrary
             }
         }
 
-        public static bool IsInDatabase(string path)
+        public static bool IsFileInDatabase(string path)
         {
             bool isInDatabase = false;
 
@@ -111,30 +118,6 @@ namespace DataAccessLibrary
             }
 
             return isInDatabase;
-        }
-
-        public static List<String> GetData()
-        {
-            List<String> entries = new List<string>();
-
-            using (SqliteConnection db = new SqliteConnection("Filename=sqliteSample.db"))
-            {
-                db.Open();
-
-                SqliteCommand selectCommand = new SqliteCommand
-                    ("SELECT Path from FILE", db);
-
-                SqliteDataReader query = selectCommand.ExecuteReader();
-
-                while (query.Read())
-                {
-                    entries.Add(query.GetString(0));
-                }
-
-                db.Close();
-            }
-
-            return entries;
         }
 
         public static List<DatabaseVideoFile> GetVideoList()
@@ -164,6 +147,73 @@ namespace DataAccessLibrary
 
             return entries;
         }
+
+        public static void AddPerformer(string name, DateTimeOffset? date, string ethnicity)
+        {
+            using (SqliteConnection db = new SqliteConnection("Filename=sqliteSample.db"))
+            {
+                db.Open();
+
+                SqliteCommand insertCommand = new SqliteCommand();
+                insertCommand.Connection = db;
+
+                Object tempDate = DBNull.Value;
+
+                if (date.HasValue)
+                {
+                    tempDate = date.Value.DateTime;
+                }
+
+                // Use parameterized query to prevent SQL injection attacks
+                insertCommand.CommandText =
+                    "INSERT INTO PERFORMER (Name, DateOfBirth, Ethnicity)" +
+                    "   VALUES (@Name, @Date, @Ethnicity);";
+                insertCommand.Parameters.AddWithValue("@Name", name);
+                insertCommand.Parameters.AddWithValue("@Date", tempDate);
+                insertCommand.Parameters.AddWithValue("@Ethnicity", ethnicity.ToUpper());
+
+                insertCommand.ExecuteReader();
+
+                db.Close();
+            }
+        }
+
+        public static ObservableCollection<Performer> GetPerformerList()
+        {
+            ObservableCollection<Performer> entries = new ObservableCollection<Performer>();
+
+            using (SqliteConnection db = new SqliteConnection("Filename=sqliteSample.db"))
+            {
+                db.Open();
+
+                SqliteCommand selectCommand = new SqliteCommand
+                    ("SELECT Name, DateOfBirth, Ethnicity from PERFORMER", db);
+
+                SqliteDataReader query = selectCommand.ExecuteReader();
+
+                while (query.Read())
+                {
+                    TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+
+                    Performer temp = new Performer
+                    {
+                        Name = query.GetString(0),
+                        Ethnicity = textInfo.ToTitleCase(query.GetString(2).ToLower())
+                    };
+
+                    if (!query.IsDBNull(1))
+                    {
+                        temp.DateOfBirth = query.GetDateTime(1);
+                    }
+
+                    entries.Add(temp);
+                }
+
+                db.Close();
+            }
+
+            return entries;
+        }
     }
 
     public class DatabaseVideoFile
@@ -172,5 +222,48 @@ namespace DataAccessLibrary
         int rating;
         int actress;
 
+    }
+
+    public abstract class BindableBase : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] String propertyName = null)
+        {
+            if (object.Equals(storage, value)) return false;
+
+            storage = value;
+            OnPropertyChanged(propertyName);
+            return true;
+        }
+
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+
+    public class Performer : BindableBase
+    {
+        private string name;
+        public string Name
+        {
+            get { return this.name; }
+            set { this.SetProperty(ref this.name, value); }
+        }
+
+        private DateTime dateOfBirth;
+        public DateTime DateOfBirth
+        {
+            get { return this.dateOfBirth; }
+            set { this.SetProperty(ref this.dateOfBirth, value); }
+        }
+
+        private string ethnicity;
+        public string Ethnicity
+        {
+            get { return this.ethnicity; }
+            set { this.SetProperty(ref this.ethnicity, value); }
+        }
     }
 }

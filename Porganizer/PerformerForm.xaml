@@ -1,0 +1,22 @@
+﻿<Page
+    x:Class="Porganizer.PerformerForm"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Porganizer"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <StackPanel>
+            <TextBox x:Name="Name" Header= "Name" Margin="12" MaxLength="50" Width="400" HorizontalAlignment="Left" InputScope="PersonalFullName" TextChanged="Name_TextChanged"/>
+            <DatePicker x:Name="BirthDatePicker" Header="Date of birth" Margin="12"/>
+            <ComboBox x:Name="Ethnicity" Header="Ethnicity" Margin="12" Width="200" SelectionChanged="ComboBox_SelectionChanged">
+                <x:String>American</x:String>
+                <x:String>Japanese</x:String>
+            </ComboBox>
+            <Button x:Name="SaveButton" Content="Save" Margin="12" Tapped="SaveButton_Tapped"/>
+        </StackPanel>
+    </Grid>
+</Page>
