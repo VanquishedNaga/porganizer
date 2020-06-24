@@ -1,6 +1,5 @@
 ﻿using DataAccessLibrary;
 using System;
-using System.Diagnostics;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
@@ -22,7 +21,6 @@ namespace Porganizer
             {
                 Name.Text = performer.Name;
                 BirthDatePicker.SelectedDate = performer.DateOfBirth;
-                Debug.WriteLine(performer.DateOfBirth);
                 temp = performer;
             }
 

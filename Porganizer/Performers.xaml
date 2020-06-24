@@ -36,7 +36,7 @@
                         <StackPanel Grid.Column="1">
                             <TextBlock Text="{x:Bind Name, Mode=OneWay}" Margin="4"/>
                             <TextBlock Text="{x:Bind Ethnicity, Mode=OneWay}" Margin="4"/>
-                            <TextBlock Text="{x:Bind DateOfBirth.Value.Date, Mode=OneWay}" Margin="4"/>
+                            <TextBlock Text="{x:Bind DateOfBirth.Value.Date.ToShortDateString(), Mode=OneWay}" Margin="4"/>
                         </StackPanel>
                     </Grid>
                 </DataTemplate>
