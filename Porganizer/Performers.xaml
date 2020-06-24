@@ -13,25 +13,14 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
-            <RowDefinition Height="80"/>
         </Grid.RowDefinitions>
 
         <CommandBar DefaultLabelPosition="Right">
-            <AppBarSeparator HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
             <AppBarButton Icon="Add" Label="Add Performer" Tapped="AddPerformer_Tapped"/>
-
-            <CommandBar.Content>
-                <StackPanel Orientation="Horizontal" Padding="5" VerticalAlignment="Stretch">
-                    <ProgressBar x:Name="Progress" IsIndeterminate="False" Maximum="100" HorizontalAlignment="Left" VerticalAlignment="Center" Width="200"/>
-                    <AppBarSeparator HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
-                    <TextBlock x:Name="TextFileNum" Margin="20,10"/>
-                    <AppBarSeparator HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
-                    <TextBlock x:Name="StatusText" Text="Status" Margin="20,10"/>
-                </StackPanel>
-            </CommandBar.Content>
+            <AppBarButton x:Name="EditPerformerButton" Icon="Edit" Label="Edit Performer" Tapped="EditPerformer_Tapped"/>
         </CommandBar>
 
-        <ListView x:Name="listView1" Padding="20" HorizontalAlignment="Stretch" ItemsSource="{x:Bind performersList, Mode=OneWay}" Grid.Row="1">
+        <ListView x:Name="performerListView" Padding="20" HorizontalAlignment="Stretch" ItemsSource="{x:Bind performersList, Mode=OneWay}" Grid.Row="1">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="lib:Performer">
                     <Grid>
@@ -47,7 +36,7 @@
                         <StackPanel Grid.Column="1">
                             <TextBlock Text="{x:Bind Name, Mode=OneWay}" Margin="4"/>
                             <TextBlock Text="{x:Bind Ethnicity, Mode=OneWay}" Margin="4"/>
-                            <TextBlock Text="{x:Bind DateOfBirth.Date, Mode=OneWay}" Margin="4"/>
+                            <TextBlock Text="{x:Bind DateOfBirth.Value.Date, Mode=OneWay}" Margin="4"/>
                         </StackPanel>
                     </Grid>
                 </DataTemplate>
@@ -67,7 +56,5 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
-
-        <TextBox x:Name="DebugOutput" AcceptsReturn="True" Grid.Row="2"/>
     </Grid>
 </Page>

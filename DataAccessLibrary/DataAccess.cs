@@ -161,7 +161,7 @@ namespace DataAccessLibrary
 
                 if (date.HasValue)
                 {
-                    tempDate = date.Value.DateTime;
+                    tempDate = date.Value.Date;
                 }
 
                 // Use parameterized query to prevent SQL injection attacks
@@ -173,6 +173,40 @@ namespace DataAccessLibrary
                 insertCommand.Parameters.AddWithValue("@Ethnicity", ethnicity.ToUpper());
 
                 insertCommand.ExecuteReader();
+
+                db.Close();
+            }
+        }
+
+        public static void UpdatePerformer(string oldName, string newName, DateTimeOffset? date, string ethnicity)
+        {
+            using (SqliteConnection db = new SqliteConnection("Filename=sqliteSample.db"))
+            {
+                db.Open();
+
+                SqliteCommand updateCommand = new SqliteCommand();
+                updateCommand.Connection = db;
+
+                Object tempDate = DBNull.Value;
+
+                if (date.HasValue)
+                {
+                    tempDate = date.Value.Date;
+                }
+
+                // Use parameterized query to prevent SQL injection attacks
+                updateCommand.CommandText =
+                    "UPDATE PERFORMER " +
+                    "   SET Name = @NewName, " +
+                    "       DateOfBirth = @Date, " +
+                    "       Ethnicity = @Ethnicity" +
+                    "   WHERE Name = @OldName;";
+                updateCommand.Parameters.AddWithValue("@NewName", newName);
+                updateCommand.Parameters.AddWithValue("@Date", tempDate);
+                updateCommand.Parameters.AddWithValue("@Ethnicity", ethnicity.ToUpper());
+                updateCommand.Parameters.AddWithValue("@OldName", oldName);
+
+                updateCommand.ExecuteReader();
 
                 db.Close();
             }
@@ -204,6 +238,10 @@ namespace DataAccessLibrary
                     if (!query.IsDBNull(1))
                     {
                         temp.DateOfBirth = query.GetDateTime(1);
+                    }
+                    else
+                    {
+                        temp.DateOfBirth = null;
                     }
 
                     entries.Add(temp);
@@ -252,8 +290,8 @@ namespace DataAccessLibrary
             set { this.SetProperty(ref this.name, value); }
         }
 
-        private DateTime dateOfBirth;
-        public DateTime DateOfBirth
+        private DateTime? dateOfBirth;
+        public DateTime? DateOfBirth
         {
             get { return this.dateOfBirth; }
             set { this.SetProperty(ref this.dateOfBirth, value); }

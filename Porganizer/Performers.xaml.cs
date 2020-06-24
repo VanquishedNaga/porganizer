@@ -26,5 +26,13 @@ namespace Porganizer
         {
             this.Frame.Navigate(typeof(PerformerForm));
         }
+
+        private void EditPerformer_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (performerListView.SelectedItem is Performer performer)
+            {
+                this.Frame.Navigate(typeof(PerformerForm), performer);
+            }
+        }
     }
 }

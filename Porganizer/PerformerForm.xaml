@@ -12,7 +12,7 @@
         <StackPanel>
             <TextBox x:Name="Name" Header= "Name" Margin="12" MaxLength="50" Width="400" HorizontalAlignment="Left" InputScope="PersonalFullName" TextChanged="Name_TextChanged"/>
             <DatePicker x:Name="BirthDatePicker" Header="Date of birth" Margin="12"/>
-            <ComboBox x:Name="Ethnicity" Header="Ethnicity" Margin="12" Width="200" SelectionChanged="ComboBox_SelectionChanged">
+            <ComboBox x:Name="Ethnicity" Header="Ethnicity" Margin="12" Width="200" SelectionChanged="ComboBox_SelectionChanged" Loaded="Ethnicity_Loaded">
                 <x:String>American</x:String>
                 <x:String>Japanese</x:String>
             </ComboBox>
