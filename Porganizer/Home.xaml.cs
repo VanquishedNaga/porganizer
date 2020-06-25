@@ -61,7 +61,7 @@ namespace Porganizer
         {
             if (args.IsSettingsSelected == true)
             {
-                //NavView_Navigate("settings", args.RecommendedNavigationTransitionInfo);
+                NavView_Navigate("settings", args.RecommendedNavigationTransitionInfo);
             }
             else if (args.SelectedItemContainer != null)
             {
@@ -75,7 +75,7 @@ namespace Porganizer
             Type _page = null;
             if (navItemTag == "settings")
             {
-                // _page = typeof(SettingsPage);
+                _page = typeof(Settings);
             }
             else
             {
@@ -125,14 +125,13 @@ namespace Porganizer
         {
             NavView.IsBackEnabled = ContentFrame.CanGoBack;
 
-            //if (ContentFrame.SourcePageType == typeof(SettingsPage))
-            //{
-            //    // SettingsItem is not part of NavView.MenuItems, and doesn't have a Tag.
-            //    NavView.SelectedItem = (NavigationViewItem)NavView.SettingsItem;
-            //    NavView.Header = "Settings";
-            //}
-            //else 
-            if (ContentFrame.SourcePageType != null)
+            if (ContentFrame.SourcePageType == typeof(Settings))
+            {
+                // SettingsItem is not part of NavView.MenuItems, and doesn't have a Tag.
+                NavView.SelectedItem = (NavigationViewItem)NavView.SettingsItem;
+                NavView.Header = "Settings";
+            }
+            else if (ContentFrame.SourcePageType != null)
             {
                 var item = _pages.FirstOrDefault(p => p.Page == e.SourcePageType);
 
