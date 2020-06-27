@@ -3,7 +3,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Porganizer"
-    xmlns:lib="using:DataAccessLibrary"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -22,9 +21,9 @@
         
         <GridView x:Name="performerListView" Padding="20" HorizontalAlignment="Stretch" ItemsSource="{x:Bind performersList, Mode=OneWay}" Grid.Row="1">
             <GridView.ItemTemplate>
-                <DataTemplate x:DataType="lib:Performer">
+                <DataTemplate x:DataType="local:Performer">
                     <StackPanel Width="200">
-                        <Image Source="{x:Bind ProfilePic, Mode=OneWay}" Margin="4"/>
+                        <Image Source="{x:Bind ProfilePic, Mode=OneWay}" Margin="4" Height="260"/>
                         <TextBlock Text="{x:Bind Name, Mode=OneWay}" Margin="4"/>
                         <TextBlock Text="{x:Bind Ethnicity, Mode=OneWay}" Margin="4"/>
                         <TextBlock Text="{x:Bind DateOfBirth.Value.Date.ToShortDateString(), Mode=OneWay}" Margin="4"/>
