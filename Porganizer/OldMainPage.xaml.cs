@@ -19,12 +19,7 @@ using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using System.IO;
 using System.Security.Cryptography;
-
-using DataAccessLibrary;
-using Windows.Security.Cryptography.Core;
-using Windows.Security.Cryptography;
 using Windows.Storage.Streams;
-using Windows.Foundation;
 
 namespace Porganizer
 {
