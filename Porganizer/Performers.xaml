@@ -19,8 +19,48 @@
             <AppBarButton Icon="Add" Label="Add Performer" Tapped="AddPerformer_Tapped"/>
             <AppBarButton x:Name="EditPerformerButton" Icon="Edit" Label="Edit Performer" Tapped="EditPerformer_Tapped"/>
         </CommandBar>
+        
+        <GridView x:Name="performerListView" Padding="20" HorizontalAlignment="Stretch" ItemsSource="{x:Bind performersList, Mode=OneWay}" Grid.Row="1">
+            <GridView.ItemTemplate>
+                <DataTemplate x:DataType="lib:Performer">
+                    <StackPanel Width="200">
+                        <Image Source="{x:Bind ProfilePic, Mode=OneWay}" Margin="4"/>
+                        <TextBlock Text="{x:Bind Name, Mode=OneWay}" Margin="4"/>
+                        <TextBlock Text="{x:Bind Ethnicity, Mode=OneWay}" Margin="4"/>
+                        <TextBlock Text="{x:Bind DateOfBirth.Value.Date.ToShortDateString(), Mode=OneWay}" Margin="4"/>
+                    </StackPanel>
+                </DataTemplate>
+            </GridView.ItemTemplate>
 
-        <ListView x:Name="performerListView" Padding="20" HorizontalAlignment="Stretch" ItemsSource="{x:Bind performersList, Mode=OneWay}" Grid.Row="1">
+            <GridView.Resources>
+                <MenuFlyout x:Name="videoMenuFlyout">
+                    <MenuFlyout.Items>
+                        <MenuFlyoutItem x:Name="Play" Text="Play"/>
+                        <MenuFlyoutItem x:Name="Screens" Text="Screens"/>
+                        <MenuFlyoutItem x:Name="OpenFileLocation" Text="Open file location"/>
+                    </MenuFlyout.Items>
+                </MenuFlyout>
+            </GridView.Resources>
+            
+            <GridView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment"  Value="Stretch"></Setter>
+                </Style>
+            </GridView.ItemContainerStyle>
+
+            <!--<GridView.Items>
+                <GridViewItem>
+                    <StackPanel Width="200">
+                        <Image Source="ms-appx:///Assets/StoreLogo.scale-400.png" Margin="4"/>
+                        <TextBlock Text="Mia Malkova" Margin="4" Style="{ThemeResource BaseTextBlockStyle}"/>
+                        <TextBlock Text="American" Margin="4" Style="{ThemeResource BodyTextBlockStyle}"/>
+                        <TextBlock Text="24/5/2019" Margin="4"/>
+                    </StackPanel>
+                </GridViewItem>
+            </GridView.Items>-->
+        </GridView>
+
+        <!--<ListView x:Name="performerListView" Padding="20" HorizontalAlignment="Stretch" ItemsSource="{x:Bind performersList, Mode=OneWay}" Grid.Row="1">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="lib:Performer">
                     <Grid>
@@ -32,7 +72,7 @@
                             <RowDefinition Height="80"/>
                         </Grid.RowDefinitions>
 
-                        <!--<Image Source="{x:Bind Thumbnail, Mode=OneWay}" Margin="5,5,5,5"/>-->
+                        --><!--<Image Source="{x:Bind Thumbnail, Mode=OneWay}" Margin="5,5,5,5"/>--><!--
                         <StackPanel Grid.Column="1">
                             <TextBlock Text="{x:Bind Name, Mode=OneWay}" Margin="4"/>
                             <TextBlock Text="{x:Bind Ethnicity, Mode=OneWay}" Margin="4"/>
@@ -55,6 +95,7 @@
                     <Setter Property="HorizontalContentAlignment"  Value="Stretch"></Setter>
                 </Style>
             </ListView.ItemContainerStyle>
-        </ListView>
+        </ListView>-->
+        
     </Grid>
 </Page>

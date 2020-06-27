@@ -10,7 +10,7 @@
 
     <Grid>
         <StackPanel>
-            <TextBlock Text="Performer images" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="4"></TextBlock>
+            <TextBlock Text="Performer images" Style="{ThemeResource TitleTextBlockStyle}" Margin="4"></TextBlock>
             <StackPanel Orientation="Horizontal">
                 <TextBox x:Name="PerformerImageFolderName" Width="400" HorizontalAlignment="Left" IsReadOnly="True"></TextBox>
                 <Button x:Name="ChooseFolderButton" Content="Choose folder" Margin="4, 0" Tapped="ChooseFolderButton_TappedAsync"></Button>

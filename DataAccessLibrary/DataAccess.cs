@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using Microsoft.Data.Sqlite;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace DataAccessLibrary
 {
@@ -283,6 +283,12 @@ namespace DataAccessLibrary
 
     public class Performer : BindableBase
     {
+        public Performer()
+        {
+            string profilePicPlaceholderPath = "ms-appx:///Assets/StoreLogo.scale-400.png";
+            ProfilePic = new BitmapImage(new Uri(profilePicPlaceholderPath));
+        }
+
         private string name;
         public string Name
         {
@@ -302,6 +308,13 @@ namespace DataAccessLibrary
         {
             get { return this.ethnicity; }
             set { this.SetProperty(ref this.ethnicity, value); }
+        }
+
+        private BitmapImage profilePic;
+        public BitmapImage ProfilePic
+        {
+            get { return this.profilePic; }
+            set { this.SetProperty(ref this.profilePic, value); }
         }
     }
 }
