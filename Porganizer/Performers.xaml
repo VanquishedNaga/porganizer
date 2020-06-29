@@ -16,9 +16,10 @@
 
         <CommandBar DefaultLabelPosition="Right">
             <AppBarButton Icon="Add" Label="Add Performer" Tapped="AddPerformer_Tapped"/>
+            <AppBarButton Icon="Delete" Label="Delete Performer" Tapped="DeletePerformer_Tapped"/>
             <AppBarButton x:Name="EditPerformerButton" Icon="Edit" Label="Edit Performer" Tapped="EditPerformer_Tapped"/>
         </CommandBar>
-        
+
         <GridView x:Name="performerListView" Padding="20" HorizontalAlignment="Stretch" ItemsSource="{x:Bind performersList, Mode=OneWay}" Grid.Row="1">
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="local:Performer">

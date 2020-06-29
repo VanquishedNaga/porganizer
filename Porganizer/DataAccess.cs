@@ -216,9 +216,30 @@ namespace Porganizer
             }
         }
 
+        public static void DeletePerformer(string name)
+        {
+            using (SqliteConnection db = new SqliteConnection("Filename=sqliteSample.db"))
+            {
+                db.Open();
+
+                SqliteCommand deleteCommand = new SqliteCommand();
+                deleteCommand.Connection = db;
+
+                // Use parameterized query to prevent SQL injection attacks
+                deleteCommand.CommandText =
+                    "DELETE FROM PERFORMER " +
+                    "   WHERE Name = @Name;";
+                deleteCommand.Parameters.AddWithValue("@Name", name);
+
+                deleteCommand.ExecuteReader();
+
+                db.Close();
+            }
+        }
+
         public static ObservableCollection<Performer> GetPerformerList()
         {
-            ObservableCollection<Performer> entries = new ObservableCollection<Performer>();
+            ObservableCollection <Performer> entries = new ObservableCollection<Performer>();
 
             using (SqliteConnection db = new SqliteConnection("Filename=sqliteSample.db"))
             {

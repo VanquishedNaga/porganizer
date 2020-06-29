@@ -26,6 +26,18 @@ namespace Porganizer
             this.Frame.Navigate(typeof(PerformerForm));
         }
 
+        private void DeletePerformer_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (performerListView.SelectedItem is Performer performer)
+            {
+                DataAccess.DeletePerformer(performer.Name);
+
+                // Refresh the list.
+                LoadPerformersFromDatabase();
+                performerListView.ItemsSource = performersList;
+            }
+        }
+
         private void EditPerformer_Tapped(object sender, TappedRoutedEventArgs e)
         {
             if (performerListView.SelectedItem is Performer performer)
