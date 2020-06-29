@@ -14,6 +14,27 @@ namespace Porganizer
 
             // Read the list of performers from database.
             LoadPerformersFromDatabase();
+
+            AssessButtons();
+        }
+
+        void AssessButtons()
+        {
+            if (performerListView.SelectedItem == null)
+            {
+                DeletePerformerButton.IsEnabled = false;
+                EditPerformerButton.IsEnabled = false;
+            }
+            else
+            {
+                DeletePerformerButton.IsEnabled = true;
+                EditPerformerButton.IsEnabled = true;
+            }
+        }
+
+        private void PerformerListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            AssessButtons();
         }
 
         private void LoadPerformersFromDatabase()
