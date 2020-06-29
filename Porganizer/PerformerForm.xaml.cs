@@ -1,4 +1,5 @@
 ﻿using System;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
@@ -12,6 +13,13 @@ namespace Porganizer
         {
             this.InitializeComponent();
             SaveButton.IsEnabled = IsFormFilled();
+
+            this.Loaded += PerformerForm_Loaded;
+        }
+
+        private void PerformerForm_Loaded(object sender, RoutedEventArgs e)
+        {
+            Name.Focus(FocusState.Programmatic);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
