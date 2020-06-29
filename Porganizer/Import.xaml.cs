@@ -22,6 +22,7 @@ namespace Porganizer
         private void Grid_DragOver(object sender, DragEventArgs e)
         {
             e.AcceptedOperation = DataPackageOperation.Copy;
+            e.DragUIOverride.Caption = "Import videos";
         }
 
         private async void Grid_Drop(object sender, DragEventArgs e)
@@ -73,6 +74,6 @@ namespace Porganizer
             }
 
             StatusText.Text = "Imported " + importingList.Count + " files.";
-        }        
+        }
     }
 }
