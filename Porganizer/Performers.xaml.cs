@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 
@@ -48,6 +49,29 @@ namespace Porganizer
         }
 
         private void DeletePerformer_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            DisplayDeleteDialog();
+        }
+
+        private async void DisplayDeleteDialog()
+        {
+            ContentDialog deleteDialog = new ContentDialog
+            {
+                Title = "Delete performer?",
+                Content = "Are you sure you want to permanently delete " + ((Performer)performerListView.SelectedItem).Name + "?",
+                PrimaryButtonText = "Delete",
+                CloseButtonText = "Cancel"
+            };
+
+            ContentDialogResult result = await deleteDialog.ShowAsync();
+
+            if (result == ContentDialogResult.Primary)
+            {
+                DeletePerformer();
+            }
+        }
+
+        void DeletePerformer()
         {
             if (performerListView.SelectedItem is Performer performer)
             {
