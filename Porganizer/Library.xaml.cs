@@ -14,6 +14,7 @@ using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using System.IO;
 using Windows.Storage.Streams;
+using System.Linq;
 
 namespace Porganizer
 {
@@ -33,6 +34,8 @@ namespace Porganizer
 
         List<DatabaseVideoFile> databaseVideoFiles = new List<DatabaseVideoFile>();
 
+        List<Performer> performerList = new List<Performer>();
+
         public Library()
         {
             this.InitializeComponent();
@@ -41,6 +44,8 @@ namespace Porganizer
             DataAccess.InitializeDatabase();
             Initialization = LoadFilesFromDatabase();
             //Initialization = LoadFolderFromPreviousSession();
+
+            performerList = DataAccess.GetPerformerList().ToList();
         }
 
         // Get video files from database.

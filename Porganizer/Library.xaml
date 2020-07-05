@@ -13,7 +13,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition/>
+            <RowDefinition />
             <RowDefinition Height="80"/>
         </Grid.RowDefinitions>
 
@@ -91,31 +91,36 @@
                 </GridView>
             </SplitView.Pane>
 
-            <StackPanel DataContext="{Binding SelectedItem, ElementName=gridView1}">
-                <Image x:Name="bitmap" Height="200" HorizontalAlignment="Stretch" Margin="12"/>
-                <Image x:Name="ImgScreenshot" Height="200" HorizontalAlignment="Stretch" Tapped="Screens_Clicked" Margin="12" Source="{Binding ScreenImage}"/>
-                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="12">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+            <ScrollViewer>
+                <StackPanel DataContext="{Binding SelectedItem, ElementName=gridView1}" Margin="12">
+                    <Image x:Name="bitmap" Height="200" HorizontalAlignment="Stretch" Margin="0, 12"/>
+                    <Image x:Name="ImgScreenshot" Height="200" HorizontalAlignment="Stretch" Tapped="Screens_Clicked" Margin="0, 12" Source="{Binding ScreenImage}"/>
+                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0, 12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Series:" Padding="5" Height="40"/>
+                            <TextBlock Text="Performer:" Padding="5" Height="40"/>
+                            <TextBlock Text="Title:" Padding="5" Height="40"/>
+                            <TextBlock Text="Size:" Padding="5" Height="40"/>
+                            <TextBlock Text="Length:" Padding="5" Height="40"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1"  >
+                            <TextBox x:Name="TextFileSeries" Padding="5" Height="40"/>
+                            <TextBox x:Name="TextFileActress" Padding="5" Height="40"/>
+                            <TextBox x:Name="TextFileTitle" Padding="5" Height="40"/>
+                            <TextBlock x:Name="TextFileSize" Padding="5" Height="40"/>
+                            <TextBlock x:Name="TextFileLength" Padding="5" Height="40"/>
+                        </StackPanel>
+                    </Grid>
                     <StackPanel>
-                        <TextBlock Text="Series:" Padding="5" Height="40"/>
-                        <TextBlock Text="Performer:" Padding="5" Height="40"/>
-                        <TextBlock Text="Title:" Padding="5" Height="40"/>
-                        <TextBlock Text="Size:" Padding="5" Height="40"/>
-                        <TextBlock Text="Length:" Padding="5" Height="40"/>
+                        <TextBlock Text="Performers" Style="{ThemeResource TitleTextBlockStyle}"></TextBlock>
+                        <ComboBox ItemsSource="{x:Bind performerList}" Width="400" DisplayMemberPath="Name" IsTextSearchEnabled="True"></ComboBox>
                     </StackPanel>
-                    <StackPanel Grid.Column="1"  >
-                        <TextBox x:Name="TextFileSeries" Padding="5" Height="40"/>
-                        <TextBox x:Name="TextFileActress" Padding="5" Height="40"/>
-                        <TextBox x:Name="TextFileTitle" Padding="5" Height="40"/>
-                        <TextBlock x:Name="TextFileSize" Padding="5" Height="40"/>
-                        <TextBlock x:Name="TextFileLength" Padding="5" Height="40"/>
-                    </StackPanel>
-                </Grid>
-
-            </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
         </SplitView>
 
         <TextBox x:Name="DebugOutput" Grid.Row="3" AcceptsReturn="True"/>
