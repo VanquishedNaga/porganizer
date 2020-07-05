@@ -54,7 +54,7 @@
                             <StackPanel Width="190" Margin="12" PointerEntered="DisplayGif" PointerExited="DisplayThumbnail">
                                 <Image Width="190" Height="130"  Stretch="Uniform" Source="{x:Bind DisplayedImage, Mode=OneWay}"/>
                                 <StackPanel Margin="0,12">
-                                    <TextBlock Text="{x:Bind File.Name}"/>
+                                    <TextBlock Text="{x:Bind File.Name, Mode=OneWay}"/>
                                 </StackPanel>
                             </StackPanel>
                         </DataTemplate>
@@ -117,7 +117,12 @@
                     </Grid>
                     <StackPanel>
                         <TextBlock Text="Performers" Style="{ThemeResource TitleTextBlockStyle}"></TextBlock>
-                        <ComboBox ItemsSource="{x:Bind performerList}" Width="400" DisplayMemberPath="Name" IsTextSearchEnabled="True"></ComboBox>
+                        <StackPanel Orientation="Horizontal">
+                            <ComboBox ItemsSource="{x:Bind performerList}" Width="400" DisplayMemberPath="Name" IsTextSearchEnabled="True"></ComboBox>
+                            <Button x:Name="AddPerformerButton" Margin="4, 0" Tapped="AddPerformerButton_Tapped">
+                                <SymbolIcon Symbol="Add"></SymbolIcon>
+                            </Button>
+                        </StackPanel>
                     </StackPanel>
                 </StackPanel>
             </ScrollViewer>

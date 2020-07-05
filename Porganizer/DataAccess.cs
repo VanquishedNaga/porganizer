@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
@@ -126,25 +127,23 @@ namespace Porganizer
             return isInDatabase;
         }
 
-        public static List<DatabaseVideoFile> GetVideoList()
+        public static List<VideoFile> GetVideoList()
         {
-            List<DatabaseVideoFile> entries = new List<DatabaseVideoFile>();
+            List<VideoFile> entries = new List<VideoFile>();
 
             using (SqliteConnection db = new SqliteConnection("Filename=sqliteSample.db"))
             {
                 db.Open();
 
                 SqliteCommand selectCommand = new SqliteCommand
-                    ("SELECT Path from FILE", db);
+                    ("SELECT FileId, Path from FILE", db);
 
                 SqliteDataReader query = selectCommand.ExecuteReader();
 
                 while (query.Read())
                 {
-                    DatabaseVideoFile temp = new DatabaseVideoFile
-                    {
-                        path = query.GetString(0)
-                    };
+                    VideoFile temp = new VideoFile(query.GetString(1));
+                    temp.FileId = query.GetInt16(0);
                     entries.Add(temp);
                 }
 
@@ -277,13 +276,6 @@ namespace Porganizer
         }
     }
 
-    public class DatabaseVideoFile
-    {
-        public string path;
-        int rating;
-        int actress;
-    }
-
     public abstract class BindableBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -332,7 +324,22 @@ namespace Porganizer
 
         public VideoFile(StorageFile inputFile)
         {
-            file = inputFile;
+            File = inputFile;
+
+            GetThumbnail();
+            FindScreens();
+            FindGif();
+        }
+
+        public VideoFile(string filePath)
+        {
+            InitFromFilePath(filePath);
+        }
+
+        private async void InitFromFilePath(string filePath)
+        {
+            StorageFile temp = await StorageFile.GetFileFromPathAsync(filePath);
+            File = temp;
 
             GetThumbnail();
             FindScreens();
@@ -397,6 +404,13 @@ namespace Porganizer
                 image.SetSource(fileStream);
                 Gif = image;
             }
+        }
+
+        private int fileId;
+        public int FileId
+        {
+            get { return this.fileId; }
+            set { this.SetProperty(ref this.fileId, value); }
         }
 
         private StorageFile file;

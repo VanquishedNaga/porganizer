@@ -32,7 +32,7 @@ namespace Porganizer
 
         string ListThumbnailPlaceholderPath = "ms-appx:///Assets/StoreLogo.scale-400.png";
 
-        List<DatabaseVideoFile> databaseVideoFiles = new List<DatabaseVideoFile>();
+        List<VideoFile> databaseVideoFiles = new List<VideoFile>();
 
         List<Performer> performerList = new List<Performer>();
 
@@ -42,22 +42,20 @@ namespace Porganizer
             AddLog("Ready.");
 
             DataAccess.InitializeDatabase();
-            Initialization = LoadFilesFromDatabase();
+            LoadFilesFromDatabase();
             //Initialization = LoadFolderFromPreviousSession();
 
             performerList = DataAccess.GetPerformerList().ToList();
         }
 
         // Get video files from database.
-        private async Task LoadFilesFromDatabase()
+        private void LoadFilesFromDatabase()
         {
             databaseVideoFiles = DataAccess.GetVideoList();
-            BitmapImage image = new BitmapImage(new Uri(ListThumbnailPlaceholderPath));
 
-            foreach (DatabaseVideoFile videoFile in databaseVideoFiles)
+            foreach (VideoFile videoFile in databaseVideoFiles)
             {
-                StorageFile file = await StorageFile.GetFileFromPathAsync(videoFile.path);
-                displayedFileList.Add(new VideoFile(file));
+                displayedFileList.Add(videoFile);
             }
         }
 
@@ -249,10 +247,10 @@ namespace Porganizer
             }
         }
 
-        private async void ReloadDatabase(object sender, RoutedEventArgs e)
+        private void ReloadDatabase(object sender, RoutedEventArgs e)
         {
             displayedFileList.Clear();
-            await LoadFilesFromDatabase();
+            LoadFilesFromDatabase();
         }
 
         private void DeleteFile(object sender, RoutedEventArgs e)
@@ -277,6 +275,14 @@ namespace Porganizer
 
             videoMenuFlyout.ShowAt(gridView, e.GetPosition(gridView));
             AddLog(rightClickedFile.File.Name);
+        }
+
+        private void AddPerformerButton_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (selectedFile != null)
+            {
+                //DataAccess.AddPerformerToFile(selectedFile.File.Path);
+            }
         }
     }
 }
