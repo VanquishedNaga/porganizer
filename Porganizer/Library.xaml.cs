@@ -260,6 +260,10 @@ namespace Porganizer
                 StatusText.Text = "Deleting " + selectedFile.File.Name + "...";
                 DataAccess.RemoveFileFromDatabase(selectedFile.File.Path);
                 StatusText.Text = "Deleted " + selectedFile.File.Name + ".";
+
+                // Refresh list after deleting.
+                displayedFileList.Clear();
+                LoadFilesFromDatabase();
             }
         }
 
