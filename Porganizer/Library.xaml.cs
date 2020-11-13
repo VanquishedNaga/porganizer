@@ -30,8 +30,6 @@ namespace Porganizer
         Stopwatch stopwatch = new Stopwatch();
         StorageItemMostRecentlyUsedList mru = StorageApplicationPermissions.MostRecentlyUsedList;
 
-        string ListThumbnailPlaceholderPath = "ms-appx:///Assets/StoreLogo.scale-400.png";
-
         List<VideoFile> databaseVideoFiles = new List<VideoFile>();
 
         List<Performer> performerList = new List<Performer>();
