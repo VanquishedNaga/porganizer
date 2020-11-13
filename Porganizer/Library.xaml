@@ -54,7 +54,7 @@
                             <StackPanel Width="190" Margin="12" PointerEntered="DisplayGif" PointerExited="DisplayThumbnail">
                                 <Image Width="190" Height="130"  Stretch="Uniform" Source="{x:Bind DisplayedImage, Mode=OneWay}"/>
                                 <StackPanel Margin="0,12">
-                                    <TextBlock Text="{x:Bind File.Name, Mode=OneWay}"/>
+                                    <TextBlock Text="{x:Bind FileName, Mode=OneWay}"/>
                                 </StackPanel>
                             </StackPanel>
                         </DataTemplate>

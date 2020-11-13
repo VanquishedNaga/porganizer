@@ -333,17 +333,38 @@ namespace Porganizer
 
         public VideoFile(string filePath)
         {
+            // Can't make constructor async, so need this function.
             InitFromFilePath(filePath);
         }
 
         private async void InitFromFilePath(string filePath)
         {
-            StorageFile temp = await StorageFile.GetFileFromPathAsync(filePath);
-            File = temp;
+            StorageFile temp = null;
+            try
+            {
+                temp = await StorageFile.GetFileFromPathAsync(filePath);
+            }
+            catch(Exception ex)
+            {
+            }
 
-            GetThumbnail();
-            FindScreens();
-            FindGif();
+            if (temp != null)
+            {
+                File = temp;
+                FileName = File.Name;
+
+                GetThumbnail();
+                FindScreens();
+                FindGif();
+            }
+            else
+            {
+                string ListThumbnailPlaceholderPath = "ms-appx:///Assets/StoreLogo.scale-400.png";
+                BitmapImage image = new BitmapImage(new Uri(ListThumbnailPlaceholderPath));
+                FileName = Path.GetFileNameWithoutExtension(filePath);
+                Thumbnail = image;
+                DisplayedImage = image;
+            }
         }
 
         private async void GetThumbnail()
@@ -420,6 +441,13 @@ namespace Porganizer
             set { this.SetProperty(ref this.file, value); }
         }
 
+        private string fileName;
+        public string FileName
+        {
+            get { return this.fileName; }
+            set { this.SetProperty(ref this.fileName, value); }
+        }
+
         private StorageFile screen;
         public StorageFile Screen
         {
@@ -441,6 +469,7 @@ namespace Porganizer
             set { this.SetProperty(ref this.gif, value); }
         }
 
+        // Could either display a thumbnail or a GIF.
         private BitmapImage displayedImage;
         public BitmapImage DisplayedImage
         {

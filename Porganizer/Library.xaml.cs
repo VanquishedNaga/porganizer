@@ -121,10 +121,8 @@ namespace Porganizer
                 IReadOnlyList<StorageFile> fileList = await results.GetFilesAsync();
 
                 // Populate file list.
-                BitmapImage image = new BitmapImage(new Uri(ListThumbnailPlaceholderPath));
                 foreach (StorageFile file in fileList)
                 {
-                    // thumbFileList.Add(new VideoFile { File = file, Thumbnail = image });
                     displayedFileList.Add(new VideoFile(file));
                 }
             }
@@ -143,9 +141,12 @@ namespace Porganizer
             AddLog("Launching video...");
             if (gridView1.SelectedItem is VideoFile temp)
             {
-                if (await Windows.System.Launcher.LaunchFileAsync(temp.File))
+                if (temp.File != null)
                 {
-                    AddLog("Video launched.");
+                    if (await Windows.System.Launcher.LaunchFileAsync(temp.File))
+                    {
+                        AddLog("Video launched.");
+                    }
                 }
             }
         }
@@ -158,18 +159,35 @@ namespace Porganizer
                 selectedFile = temp;
                 selectedIndex = gridView1.SelectedIndex;
 
-                // Display video details.
-                TextFileSize.Text = ((await temp.File.GetBasicPropertiesAsync()).Size / 1024 / 1024).ToString() + " MB";
-                TextFileLength.Text = (await temp.File.Properties.GetVideoPropertiesAsync()).Duration.Minutes.ToString() + " min";
+                if (selectedFile.File != null)
+                {
+                    // Display video details.
+                    TextFileSize.Text = ((await selectedFile.File.GetBasicPropertiesAsync()).Size / 1024 / 1024).ToString() + " MB";
+                    TextFileLength.Text = (await selectedFile.File.Properties.GetVideoPropertiesAsync()).Duration.Minutes.ToString() + " min";
 
-                // Always display GIF in details view.
-                if (temp.Gif != null)
-                {
-                    bitmap.Source = temp.Gif;
-                }
-                else
-                {
-                    bitmap.Source = temp.Thumbnail;
+                    Match series = Regex.Match(Path.GetFileNameWithoutExtension(selectedFile.File.Name), @"^\[(.+?)\]\s*(.+?)\s*\((.+?)\)$");
+                    if (series.Success)
+                    {
+                        TextFileSeries.Text = series.Groups[1].Value;
+                        TextFileActress.Text = series.Groups[2].Value;
+                        TextFileTitle.Text = series.Groups[3].Value;
+                    }
+                    else
+                    {
+                        TextFileSeries.Text = Path.GetFileNameWithoutExtension(selectedFile.File.Name);
+                        TextFileActress.Text = "";
+                        TextFileTitle.Text = "";
+                    }
+
+                    // Always display GIF in details view.
+                    if (selectedFile.Gif != null)
+                    {
+                        bitmap.Source = selectedFile.Gif;
+                    }
+                    else
+                    {
+                        bitmap.Source = selectedFile.Thumbnail;
+                    }
                 }
 
                 // Set screenshot image.
@@ -180,29 +198,18 @@ namespace Porganizer
                     image.SetSource(fileStream);
                     selectedFile.ScreenImage = image;
                 }
-
-                Match series = Regex.Match(Path.GetFileNameWithoutExtension(temp.File.Name), @"^\[(.+?)\]\s*(.+?)\s*\((.+?)\)$");
-                if (series.Success)
-                {
-                    TextFileSeries.Text = series.Groups[1].Value;
-                    TextFileActress.Text = series.Groups[2].Value;
-                    TextFileTitle.Text = series.Groups[3].Value;
-                }
-                else
-                {
-                    TextFileSeries.Text = Path.GetFileNameWithoutExtension(temp.File.Name);
-                    TextFileActress.Text = "";
-                    TextFileTitle.Text = "";
-                }
             }
         }
 
         private async void Play_Clicked(object sender, RoutedEventArgs e)
         {
-            AddLog("Launching video...");
-            if (await Windows.System.Launcher.LaunchFileAsync(rightClickedFile.File))
+            if (rightClickedFile.File != null)
             {
-                AddLog("Video launched.");
+                AddLog("Launching video...");
+                if (await Windows.System.Launcher.LaunchFileAsync(rightClickedFile.File))
+                {
+                    AddLog("Video launched.");
+                }
             }
         }
 
@@ -216,12 +223,15 @@ namespace Porganizer
 
         private async void OpenFileLocation_Clicked(object sender, RoutedEventArgs e)
         {
-            AddLog("Opening folder...");
-            StorageFolder folder = await rightClickedFile.File.GetParentAsync();
-            var success = await Windows.System.Launcher.LaunchFolderAsync(folder);
-            if (success)
+            if (rightClickedFile.File != null)
             {
-                AddLog("Folder opened.");
+                AddLog("Opening folder...");
+                StorageFolder folder = await rightClickedFile.File.GetParentAsync();
+                var success = await Windows.System.Launcher.LaunchFolderAsync(folder);
+                if (success)
+                {
+                    AddLog("Folder opened.");
+                }
             }
         }
 
@@ -278,7 +288,6 @@ namespace Porganizer
             }
 
             videoMenuFlyout.ShowAt(gridView, e.GetPosition(gridView));
-            AddLog(rightClickedFile.File.Name);
         }
 
         private void AddPerformerButton_Tapped(object sender, TappedRoutedEventArgs e)
