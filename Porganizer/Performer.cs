@@ -16,8 +16,9 @@ namespace Porganizer
             ProfilePic = new BitmapImage(new Uri(profilePicPlaceholderPath));
         }
 
-        public Performer(string inName, string inEthnicity)
+        public Performer(int inPerformerId, string inName, string inEthnicity)
         {
+            PerformerId = inPerformerId;
             Name = inName;
             Ethnicity = inEthnicity;
             GetProfilePicAsync();
@@ -55,6 +56,15 @@ namespace Porganizer
                     ProfilePic = screen;
                 }
             }
+        }
+
+        // Attributes.
+
+        private int performerId;
+        public int PerformerId
+        {
+            get { return this.performerId; }
+            set { this.SetProperty(ref this.performerId, value); }
         }
 
         private string name;

@@ -118,7 +118,7 @@
                     <StackPanel>
                         <TextBlock Text="Performers" Style="{ThemeResource TitleTextBlockStyle}"></TextBlock>
                         <StackPanel Orientation="Horizontal">
-                            <ComboBox ItemsSource="{x:Bind performerList}" Width="400" DisplayMemberPath="Name" IsTextSearchEnabled="True"></ComboBox>
+                            <ComboBox x:Name="performerComboBox" ItemsSource="{x:Bind performerList}" Width="400" DisplayMemberPath="Name" IsTextSearchEnabled="True"></ComboBox>
                             <Button x:Name="AddPerformerButton" Margin="4, 0" Tapped="AddPerformerButton_Tapped">
                                 <SymbolIcon Symbol="Add"></SymbolIcon>
                             </Button>

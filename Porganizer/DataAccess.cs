@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Linq;
 using Microsoft.Data.Sqlite;
 
 namespace Porganizer
@@ -39,7 +40,7 @@ namespace Porganizer
                     "   Ethnicity       NVARCHAR(25)    NOT NULL" +
                     "       CHECK (Ethnicity IN ('JAPANESE', 'AMERICAN'))" +
                     ");" +
-                    "CREATE TABLE IF NOT EXISTS PERFOMANCE (" +
+                    "CREATE TABLE IF NOT EXISTS PERFORMANCE (" +
                     "   FileId          INTEGER," +
                     "   PerformerId     INTEGER," +
                     "   CONSTRAINT FileFK FOREIGN KEY (FileId)" +
@@ -237,7 +238,7 @@ namespace Porganizer
                 db.Open();
 
                 SqliteCommand selectCommand = new SqliteCommand
-                    ("SELECT Name, DateOfBirth, Ethnicity from PERFORMER", db);
+                    ("SELECT Name, DateOfBirth, Ethnicity, PerformerId from PERFORMER", db);
 
                 SqliteDataReader query = selectCommand.ExecuteReader();
 
@@ -245,7 +246,7 @@ namespace Porganizer
                 {
                     TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
 
-                    Performer temp = new Performer(query.GetString(0), textInfo.ToTitleCase(query.GetString(2).ToLower()));
+                    Performer temp = new Performer(query.GetInt16(3), query.GetString(0), textInfo.ToTitleCase(query.GetString(2).ToLower()));
 
                     if (!query.IsDBNull(1))
                     {
@@ -259,10 +260,41 @@ namespace Porganizer
                     entries.Add(temp);
                 }
 
+                entries = new ObservableCollection<Performer>(entries.OrderBy(performer => performer.Name));
+
                 db.Close();
             }
 
             return entries;
+        }
+
+        public static void AddPerformerToFile(int fileId, int performerId)
+        {
+            using (SqliteConnection db = new SqliteConnection("Filename=sqliteSample.db"))
+            {
+                db.Open();
+
+                SqliteCommand insertCommand = new SqliteCommand();
+                insertCommand.Connection = db;
+
+                // Use parameterized query to prevent SQL injection attacks
+                insertCommand.CommandText =
+                    "INSERT INTO PERFORMANCE (FileId, PerformerId)" +
+                    "   VALUES (@FileId, @PerformerId);";
+                insertCommand.Parameters.AddWithValue("@FileId", fileId);
+                insertCommand.Parameters.AddWithValue("@PerformerId", performerId);
+
+                try
+                {
+                    insertCommand.ExecuteReader();
+                }
+                catch (Exception)
+                {
+
+                }
+
+                db.Close();
+            }
         }
     }
 }

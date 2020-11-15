@@ -290,9 +290,9 @@ namespace Porganizer
 
         private void AddPerformerButton_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            if (selectedFile != null)
+            if ((selectedFile != null) && (performerComboBox.SelectedItem is Performer performer))
             {
-                //DataAccess.AddPerformerToFile(selectedFile.File.Path);
+                DataAccess.AddPerformerToFile(selectedFile.FileId, performer.PerformerId);
             }
         }
     }
