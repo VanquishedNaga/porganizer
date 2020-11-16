@@ -123,7 +123,15 @@
                                 <SymbolIcon Symbol="Add"></SymbolIcon>
                             </Button>
                         </StackPanel>
-                        <ListBox x:Name="performersListBox" ItemsSource="{x:Bind filePerformerList}" Width="400" DisplayMemberPath="Name" HorizontalAlignment="Left"/>
+                        <ListBox x:Name="performersListBox" ItemsSource="{x:Bind filePerformerList}" Width="400" DisplayMemberPath="Name" HorizontalAlignment="Left" RightTapped="performersListBox_RightTapped">
+                            <ListBox.Resources>
+                                <MenuFlyout x:Name="performersListBoxMenuFlyout">
+                                    <MenuFlyout.Items>
+                                        <MenuFlyoutItem x:Name="DeleteFilePerformer" Text="Delete" Click="DeleteFilePerformer_Clicked" />
+                                    </MenuFlyout.Items>
+                                </MenuFlyout>
+                            </ListBox.Resources>
+                        </ListBox>
                     </StackPanel>
                 </StackPanel>
             </ScrollViewer>

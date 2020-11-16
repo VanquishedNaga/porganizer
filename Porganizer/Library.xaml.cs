@@ -23,6 +23,7 @@ namespace Porganizer
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         List<Performer> performerList = new List<Performer>();
         List<VideoFile> databaseVideoFiles = new List<VideoFile>();
+        Performer rightClickedPerformer;
         Stopwatch stopwatch = new Stopwatch();
         StorageFolder localFolder = ApplicationData.Current.LocalFolder;
         StorageItemMostRecentlyUsedList mru = StorageApplicationPermissions.MostRecentlyUsedList;
@@ -194,13 +195,19 @@ namespace Porganizer
                     selectedFile.ScreenImage = image;
                 }
 
-                // Set performers list
-                ObservableCollection<Performer> tempFilePerformerList = DataAccess.GetFilePerformers(selectedFile.FileId);
-                filePerformerList.Clear();
-                foreach (Performer performer in tempFilePerformerList)
-                {
-                    filePerformerList.Add(performer);
-                }
+                RefreshFilePerformers();
+
+            }
+        }
+
+        private void RefreshFilePerformers()
+        {
+            // Set performers list
+            ObservableCollection<Performer> tempFilePerformerList = DataAccess.GetFilePerformers(selectedFile.FileId);
+            filePerformerList.Clear();
+            foreach (Performer performer in tempFilePerformerList)
+            {
+                filePerformerList.Add(performer);
             }
         }
 
@@ -299,6 +306,20 @@ namespace Porganizer
             {
                 DataAccess.AddPerformerToFile(selectedFile.FileId, performer.PerformerId);
             }
+        }
+
+        private void performersListBox_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            ListBox performersListBox = (ListBox)sender;
+            rightClickedPerformer = ((FrameworkElement)e.OriginalSource).DataContext as Performer;
+
+            performersListBoxMenuFlyout.ShowAt(performersListBox, e.GetPosition(performersListBox));
+        }
+
+        private void DeleteFilePerformer_Clicked(object sender, RoutedEventArgs e)
+        {
+            DataAccess.DeletePerformerFromFile(selectedFile.FileId, rightClickedPerformer.PerformerId);
+            RefreshFilePerformers();
         }
     }
 }
