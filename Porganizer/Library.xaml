@@ -123,6 +123,7 @@
                                 <SymbolIcon Symbol="Add"></SymbolIcon>
                             </Button>
                         </StackPanel>
+                        <ListBox x:Name="performersListBox" ItemsSource="{x:Bind filePerformerList}" Width="400" DisplayMemberPath="Name" HorizontalAlignment="Left"/>
                     </StackPanel>
                 </StackPanel>
             </ScrollViewer>

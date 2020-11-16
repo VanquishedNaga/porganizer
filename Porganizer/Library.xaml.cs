@@ -20,19 +20,17 @@ namespace Porganizer
 {
     public sealed partial class Library : Page
     {
-        public ObservableCollection<VideoFile> displayedFileList = new ObservableCollection<VideoFile>();
+        ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+        List<Performer> performerList = new List<Performer>();
+        List<VideoFile> databaseVideoFiles = new List<VideoFile>();
+        Stopwatch stopwatch = new Stopwatch();
+        StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+        StorageItemMostRecentlyUsedList mru = StorageApplicationPermissions.MostRecentlyUsedList;
         VideoFile rightClickedFile;
         VideoFile selectedFile;
-        int selectedIndex;
-        ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-        StorageFolder localFolder = ApplicationData.Current.LocalFolder;
-        public Task Initialization { get; private set; }
-        Stopwatch stopwatch = new Stopwatch();
-        StorageItemMostRecentlyUsedList mru = StorageApplicationPermissions.MostRecentlyUsedList;
-
-        List<VideoFile> databaseVideoFiles = new List<VideoFile>();
-
-        List<Performer> performerList = new List<Performer>();
+        public ObservableCollection<VideoFile> displayedFileList = new ObservableCollection<VideoFile>();
+        public ObservableCollection<Performer> filePerformerList = new ObservableCollection<Performer>();
+        //public Task Initialization { get; private set; }
 
         public Library()
         {
@@ -155,7 +153,6 @@ namespace Porganizer
             if (gridView1.SelectedItem is VideoFile temp)
             {
                 selectedFile = temp;
-                selectedIndex = gridView1.SelectedIndex;
 
                 if (selectedFile.File != null)
                 {
@@ -195,6 +192,14 @@ namespace Porganizer
                     BitmapImage image = new BitmapImage();
                     image.SetSource(fileStream);
                     selectedFile.ScreenImage = image;
+                }
+
+                // Set performers list
+                ObservableCollection<Performer> tempFilePerformerList = DataAccess.GetFilePerformers(selectedFile.FileId);
+                filePerformerList.Clear();
+                foreach (Performer performer in tempFilePerformerList)
+                {
+                    filePerformerList.Add(performer);
                 }
             }
         }

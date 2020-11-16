@@ -45,8 +45,10 @@ namespace Porganizer
             FindGif();
         }
 
-        public VideoFile(string filePath)
+        public VideoFile(int inFileId, string filePath)
         {
+            FileId = inFileId;
+
             // Can't make constructor async, so need this function.
             InitFromFilePath(filePath);
         }
@@ -58,7 +60,7 @@ namespace Porganizer
             {
                 temp = await StorageFile.GetFileFromPathAsync(filePath);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
 

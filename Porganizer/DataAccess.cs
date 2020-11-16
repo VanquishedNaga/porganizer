@@ -133,8 +133,7 @@ namespace Porganizer
 
                 while (query.Read())
                 {
-                    VideoFile temp = new VideoFile(query.GetString(1));
-                    temp.FileId = query.GetInt16(0);
+                    VideoFile temp = new VideoFile(query.GetInt16(0), query.GetString(1));
                     entries.Add(temp);
                 }
 
@@ -237,8 +236,9 @@ namespace Porganizer
             {
                 db.Open();
 
-                SqliteCommand selectCommand = new SqliteCommand
-                    ("SELECT Name, DateOfBirth, Ethnicity, PerformerId from PERFORMER", db);
+                SqliteCommand selectCommand = new SqliteCommand(
+                    "SELECT Name, DateOfBirth, Ethnicity, PerformerId from PERFORMER " +
+                    "   ORDER BY Name", db);
 
                 SqliteDataReader query = selectCommand.ExecuteReader();
 
@@ -259,8 +259,6 @@ namespace Porganizer
 
                     entries.Add(temp);
                 }
-
-                entries = new ObservableCollection<Performer>(entries.OrderBy(performer => performer.Name));
 
                 db.Close();
             }
@@ -295,6 +293,47 @@ namespace Porganizer
 
                 db.Close();
             }
+        }
+
+        public static ObservableCollection<Performer> GetFilePerformers(int fileId)
+        {
+            ObservableCollection<Performer> entries = new ObservableCollection<Performer>();
+
+            using (SqliteConnection db = new SqliteConnection("Filename=sqliteSample.db"))
+            {
+                db.Open();
+
+                SqliteCommand selectCommand = new SqliteCommand (
+                    "SELECT Name, DateOfBirth, Ethnicity, PerformerId FROM PERFORMER " +
+                    "   WHERE EXISTS(SELECT PerformerId FROM PERFORMANCE " +
+                    "                WHERE FileId = @FileId AND PERFORMER.PerformerId = PERFORMANCE.PerformerId) " +
+                    "   ORDER BY Name", db);
+                selectCommand.Parameters.AddWithValue("@FileId", fileId);
+
+                SqliteDataReader query = selectCommand.ExecuteReader();
+
+                while (query.Read())
+                {
+                    TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+
+                    Performer temp = new Performer(query.GetInt16(3), query.GetString(0), textInfo.ToTitleCase(query.GetString(2).ToLower()));
+
+                    if (!query.IsDBNull(1))
+                    {
+                        temp.DateOfBirth = query.GetDateTime(1);
+                    }
+                    else
+                    {
+                        temp.DateOfBirth = null;
+                    }
+
+                    entries.Add(temp);
+                }
+
+                db.Close();
+            }
+
+            return entries;
         }
     }
 }
