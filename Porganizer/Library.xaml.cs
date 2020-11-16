@@ -153,6 +153,8 @@ namespace Porganizer
         {
             if (gridView1.SelectedItem is VideoFile temp)
             {
+                ClearDetailsPane();
+
                 selectedFile = temp;
 
                 if (selectedFile.File != null)
@@ -171,8 +173,6 @@ namespace Porganizer
                     else
                     {
                         TextFileSeries.Text = Path.GetFileNameWithoutExtension(selectedFile.File.Name);
-                        TextFileActress.Text = "";
-                        TextFileTitle.Text = "";
                     }
 
                     // Always display GIF in details view.
@@ -196,8 +196,21 @@ namespace Porganizer
                 }
 
                 RefreshFilePerformers();
-
             }
+        }
+
+        private void ClearDetailsPane()
+        {
+            TextFileSize.Text = "";
+            TextFileLength.Text = "";
+            TextFileSeries.Text = "";
+            TextFileActress.Text = "";
+            TextFileTitle.Text = "";
+
+            bitmap.Source = null;
+
+            performerComboBox.SelectedIndex = -1;
+            filePerformerList.Clear();
         }
 
         private void RefreshFilePerformers()
@@ -305,6 +318,7 @@ namespace Porganizer
             if ((selectedFile != null) && (performerComboBox.SelectedItem is Performer performer))
             {
                 DataAccess.AddPerformerToFile(selectedFile.FileId, performer.PerformerId);
+                RefreshFilePerformers();
             }
         }
 
