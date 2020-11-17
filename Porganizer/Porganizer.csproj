@@ -107,9 +107,6 @@
     <Compile Include="Library.xaml.cs">
       <DependentUpon>Library.xaml</DependentUpon>
     </Compile>
-    <Compile Include="OldMainPage.xaml.cs">
-      <DependentUpon>OldMainPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="PerformerForm.xaml.cs">
       <DependentUpon>PerformerForm.xaml</DependentUpon>
     </Compile>
@@ -193,10 +190,6 @@
     <Page Include="Library.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="OldMainPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="PerformerForm.xaml">
       <SubType>Designer</SubType>

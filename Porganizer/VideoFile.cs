@@ -69,6 +69,7 @@ namespace Porganizer
                 File = temp;
                 FileName = File.Name;
 
+                GetFilePropertiesAsync();
                 GetThumbnail();
                 FindScreens();
                 FindGif();
@@ -81,6 +82,14 @@ namespace Porganizer
                 Thumbnail = image;
                 DisplayedImage = image;
             }
+        }
+
+        private async void GetFilePropertiesAsync()
+        {
+            sizeInByte = (await File.GetBasicPropertiesAsync()).Size;
+            SizeStringInMb = (sizeInByte / 1024 / 1024).ToString() + " MB";
+            durationInMin = (await File.Properties.GetVideoPropertiesAsync()).Duration.Minutes;
+            DurationStringInMin = durationInMin.ToString() + " min";
         }
 
         private async void GetThumbnail()
@@ -200,6 +209,22 @@ namespace Porganizer
         {
             get { return this.screenImage; }
             set { this.SetProperty(ref this.screenImage, value); }
+        }
+
+        private ulong sizeInByte;
+        private string sizeStringInMb;
+        public string SizeStringInMb
+        {
+            get { return this.sizeStringInMb; }
+            set { this.SetProperty(ref this.sizeStringInMb, value); }
+        }
+
+        private int durationInMin;
+        private string durationStringInMin;
+        public string DurationStringInMin
+        {
+            get { return this.durationStringInMin; }
+            set { this.SetProperty(ref this.durationStringInMin, value); }
         }
     }
 }

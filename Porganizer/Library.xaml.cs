@@ -160,9 +160,6 @@ namespace Porganizer
                 if (selectedFile.File != null)
                 {
                     // Display video details.
-                    TextFileSize.Text = ((await selectedFile.File.GetBasicPropertiesAsync()).Size / 1024 / 1024).ToString() + " MB";
-                    TextFileLength.Text = (await selectedFile.File.Properties.GetVideoPropertiesAsync()).Duration.Minutes.ToString() + " min";
-
                     Match series = Regex.Match(Path.GetFileNameWithoutExtension(selectedFile.File.Name), @"^\[(.+?)\]\s*(.+?)\s*\((.+?)\)$");
                     if (series.Success)
                     {
@@ -201,8 +198,6 @@ namespace Porganizer
 
         private void ClearDetailsPane()
         {
-            TextFileSize.Text = "";
-            TextFileLength.Text = "";
             TextFileSeries.Text = "";
             TextFileActress.Text = "";
             TextFileTitle.Text = "";
