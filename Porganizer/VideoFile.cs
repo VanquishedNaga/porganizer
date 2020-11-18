@@ -87,7 +87,15 @@ namespace Porganizer
         private async void GetFilePropertiesAsync()
         {
             sizeInByte = (await File.GetBasicPropertiesAsync()).Size;
-            SizeStringInMb = (sizeInByte / 1024 / 1024).ToString() + " MB";
+            if (sizeInByte >= 1024 * 1024 * 1024)
+            {
+                SizeString = (sizeInByte / 1024 / 1024 / 1024).ToString("N2") + " GB";
+            }
+            else
+            {
+                SizeString = (sizeInByte / 1024 / 1024).ToString() + " MB";
+            }
+
             durationInMin = (await File.Properties.GetVideoPropertiesAsync()).Duration.Minutes;
             DurationStringInMin = durationInMin.ToString() + " min";
         }
@@ -211,9 +219,9 @@ namespace Porganizer
             set { this.SetProperty(ref this.screenImage, value); }
         }
 
-        private ulong sizeInByte;
+        private float sizeInByte;
         private string sizeStringInMb;
-        public string SizeStringInMb
+        public string SizeString
         {
             get { return this.sizeStringInMb; }
             set { this.SetProperty(ref this.sizeStringInMb, value); }

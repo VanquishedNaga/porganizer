@@ -111,7 +111,7 @@
                             <TextBox x:Name="TextFileSeries" Padding="5" Height="40"/>
                             <TextBox x:Name="TextFileActress" Padding="5" Height="40"/>
                             <TextBox x:Name="TextFileTitle" Padding="5" Height="40"/>
-                            <TextBlock x:Name="TextFileSize" Padding="5" Height="40" Text="{Binding SizeStringInMb}"/>
+                            <TextBlock x:Name="TextFileSize" Padding="5" Height="40" Text="{Binding SizeString}"/>
                             <TextBlock x:Name="TextFileLength" Padding="5" Height="40" Text="{Binding DurationStringInMin}"/>
                         </StackPanel>
                     </Grid>
