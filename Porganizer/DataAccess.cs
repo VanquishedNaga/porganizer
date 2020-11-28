@@ -127,7 +127,37 @@ namespace Porganizer
                 db.Open();
 
                 SqliteCommand selectCommand = new SqliteCommand
-                    ("SELECT FileId, Path from FILE", db);
+                    ("SELECT FileId, Path FROM FILE", db);
+
+                SqliteDataReader query = selectCommand.ExecuteReader();
+
+                while (query.Read())
+                {
+                    VideoFile temp = new VideoFile(query.GetInt16(0), query.GetString(1));
+                    entries.Add(temp);
+                }
+
+                db.Close();
+            }
+
+            return entries;
+        }
+
+        public static List<VideoFile> GetVideoListByPerformerName(string performerName)
+        {
+            List<VideoFile> entries = new List<VideoFile>();
+
+            using (SqliteConnection db = new SqliteConnection("Filename=sqliteSample.db"))
+            {
+                db.Open();
+
+                SqliteCommand selectCommand = new SqliteCommand(
+                    "SELECT FileId, Path FROM FILE " +
+                    "WHERE FileId IN " +
+                    "   (SELECT FileId FROM PERFORMANCE " +
+                    "   WHERE PerformerId IN " +
+                    "       (SELECT PerformerId FROM PERFORMER " +
+                    "       WHERE Name LIKE '%" + performerName + "%'))", db);
 
                 SqliteDataReader query = selectCommand.ExecuteReader();
 
@@ -237,7 +267,7 @@ namespace Porganizer
                 db.Open();
 
                 SqliteCommand selectCommand = new SqliteCommand(
-                    "SELECT Name, DateOfBirth, Ethnicity, PerformerId from PERFORMER " +
+                    "SELECT Name, DateOfBirth, Ethnicity, PerformerId FROM PERFORMER " +
                     "   ORDER BY Name", db);
 
                 SqliteDataReader query = selectCommand.ExecuteReader();

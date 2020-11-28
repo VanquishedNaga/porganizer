@@ -43,7 +43,10 @@
                 <x:String>Date</x:String>
                 <x:String>Size</x:String>
             </ComboBox>
-            <AutoSuggestBox PlaceholderText="Actress" QueryIcon="Find" Width="200" Margin="12"/>
+            <AutoSuggestBox x:Name="performerSearchBox" PlaceholderText="Performer" QueryIcon="Find" 
+                            Width="200" Margin="12" 
+                            QuerySubmitted="PerformerSearchBox_QuerySubmitted"
+                            TextChanged="PerformerSearchBox_TextChanged"/>
         </StackPanel>
 
         <SplitView IsPaneOpen="True" DisplayMode="Inline" OpenPaneLength="1120" Grid.Row="2">
@@ -93,9 +96,7 @@
 
             <ScrollViewer>
                 <StackPanel DataContext="{Binding SelectedItem, ElementName=gridView1}" Margin="12">
-                    <Image x:Name="bitmap" Height="200" HorizontalAlignment="Stretch" Margin="0, 12"/>
-                    <Image x:Name="ImgScreenshot" Height="200" HorizontalAlignment="Stretch" Tapped="Screens_Clicked" Margin="0, 12" Source="{Binding ScreenImage}"/>
-                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0, 12">
+                    <Grid x:Name="fileDetails" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0, 12">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
@@ -108,17 +109,15 @@
                             <RowDefinition />
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" Text="Series:" Padding="4"/>
-                        <TextBlock Grid.Row="1" Text="Performer:" Padding="4"/>
                         <TextBlock Grid.Row="2" Text="Title:" Padding="4"/>
                         <TextBlock Grid.Row="3" Text="Size:" Padding="4"/>
                         <TextBlock Grid.Row="4" Text="Length:" Padding="4"/>
                         <TextBox Grid.Column="1" Grid.Row="0" x:Name="TextFileSeries" Padding="4"/>
-                        <TextBox Grid.Column="1" Grid.Row="1" x:Name="TextFileActress" Padding="4"/>
                         <TextBox Grid.Column="1" Grid.Row="2" x:Name="TextFileTitle" Padding="4"/>
                         <TextBlock Grid.Column="1" Grid.Row="3" x:Name="TextFileSize" Padding="4" Text="{Binding SizeString}"/>
                         <TextBlock Grid.Column="1" Grid.Row="4" x:Name="TextFileLength" Padding="4" Text="{Binding DurationStringInMin}"/>
                     </Grid>
-                    <StackPanel>
+                    <StackPanel x:Name="filePerformers">
                         <TextBlock Text="Performers" Style="{ThemeResource TitleTextBlockStyle}"></TextBlock>
                         <StackPanel Orientation="Horizontal">
                             <ComboBox x:Name="performerComboBox" ItemsSource="{x:Bind performerList}" Width="400" DisplayMemberPath="Name" IsTextSearchEnabled="True"></ComboBox>
@@ -136,6 +135,8 @@
                             </ListBox.Resources>
                         </ListBox>
                     </StackPanel>
+                    <Image x:Name="bitmap" Height="200" HorizontalAlignment="Stretch" Margin="0, 12"/>
+                    <Image x:Name="ImgScreenshot" Height="200" HorizontalAlignment="Stretch" Tapped="Screens_Clicked" Margin="0, 12" Source="{Binding ScreenImage}"/>
                 </StackPanel>
             </ScrollViewer>
         </SplitView>

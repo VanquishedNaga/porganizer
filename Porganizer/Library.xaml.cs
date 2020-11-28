@@ -48,6 +48,7 @@ namespace Porganizer
         // Get video files from database.
         private void LoadFilesFromDatabase()
         {
+            displayedFileList.Clear();
             databaseVideoFiles = DataAccess.GetVideoList();
 
             foreach (VideoFile videoFile in databaseVideoFiles)
@@ -164,7 +165,6 @@ namespace Porganizer
                     if (series.Success)
                     {
                         TextFileSeries.Text = series.Groups[1].Value;
-                        TextFileActress.Text = series.Groups[2].Value;
                         TextFileTitle.Text = series.Groups[3].Value;
                     }
                     else
@@ -199,7 +199,6 @@ namespace Porganizer
         private void ClearDetailsPane()
         {
             TextFileSeries.Text = "";
-            TextFileActress.Text = "";
             TextFileTitle.Text = "";
 
             bitmap.Source = null;
@@ -277,7 +276,6 @@ namespace Porganizer
 
         private void ReloadDatabase(object sender, RoutedEventArgs e)
         {
-            displayedFileList.Clear();
             LoadFilesFromDatabase();
         }
 
@@ -290,7 +288,6 @@ namespace Porganizer
                 StatusText.Text = "Deleted " + selectedFile.File.Name + ".";
 
                 // Refresh list after deleting.
-                displayedFileList.Clear();
                 LoadFilesFromDatabase();
             }
         }
@@ -329,6 +326,29 @@ namespace Porganizer
         {
             DataAccess.DeletePerformerFromFile(selectedFile.FileId, rightClickedPerformer.PerformerId);
             RefreshFilePerformers();
+        }
+
+        private void PerformerSearchBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            if (args.QueryText == "")
+            {
+                LoadFilesFromDatabase();
+            }
+            else
+            {
+                AddLog(string.Format("Searching for files by \"{0}\"", args.QueryText));
+                List<VideoFile> tempList = DataAccess.GetVideoListByPerformerName(args.QueryText);
+
+                displayedFileList.Clear();
+                foreach (VideoFile videoFile in tempList)
+                {
+                    displayedFileList.Add(videoFile);
+                }
+            }
+        }
+
+        private void PerformerSearchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
         }
     }
 }
