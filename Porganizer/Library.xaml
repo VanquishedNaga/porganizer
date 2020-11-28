@@ -100,20 +100,23 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <StackPanel>
-                            <TextBlock Text="Series:" Padding="5" Height="40"/>
-                            <TextBlock Text="Performer:" Padding="5" Height="40"/>
-                            <TextBlock Text="Title:" Padding="5" Height="40"/>
-                            <TextBlock Text="Size:" Padding="5" Height="40"/>
-                            <TextBlock Text="Length:" Padding="5" Height="40"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="1"  >
-                            <TextBox x:Name="TextFileSeries" Padding="5" Height="40"/>
-                            <TextBox x:Name="TextFileActress" Padding="5" Height="40"/>
-                            <TextBox x:Name="TextFileTitle" Padding="5" Height="40"/>
-                            <TextBlock x:Name="TextFileSize" Padding="5" Height="40" Text="{Binding SizeString}"/>
-                            <TextBlock x:Name="TextFileLength" Padding="5" Height="40" Text="{Binding DurationStringInMin}"/>
-                        </StackPanel>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="Series:" Padding="4"/>
+                        <TextBlock Grid.Row="1" Text="Performer:" Padding="4"/>
+                        <TextBlock Grid.Row="2" Text="Title:" Padding="4"/>
+                        <TextBlock Grid.Row="3" Text="Size:" Padding="4"/>
+                        <TextBlock Grid.Row="4" Text="Length:" Padding="4"/>
+                        <TextBox Grid.Column="1" Grid.Row="0" x:Name="TextFileSeries" Padding="4"/>
+                        <TextBox Grid.Column="1" Grid.Row="1" x:Name="TextFileActress" Padding="4"/>
+                        <TextBox Grid.Column="1" Grid.Row="2" x:Name="TextFileTitle" Padding="4"/>
+                        <TextBlock Grid.Column="1" Grid.Row="3" x:Name="TextFileSize" Padding="4" Text="{Binding SizeString}"/>
+                        <TextBlock Grid.Column="1" Grid.Row="4" x:Name="TextFileLength" Padding="4" Text="{Binding DurationStringInMin}"/>
                     </Grid>
                     <StackPanel>
                         <TextBlock Text="Performers" Style="{ThemeResource TitleTextBlockStyle}"></TextBlock>
