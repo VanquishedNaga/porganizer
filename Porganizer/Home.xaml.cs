@@ -29,7 +29,8 @@ namespace Porganizer
             ("Import", typeof(Import)),
             ("Library", typeof(Library)),
             ("Clips", typeof(Library)),
-            ("Performers", typeof(Performers)),
+            ("Performers", typeof(PerformersView)),
+            ("Series", typeof(SeriesView)),
             ("Unlinked", typeof(Library)),
         };
 

@@ -19,6 +19,7 @@
                 <NavigationViewItem Tag="Library" Icon="Library" Content="Library"/>
                 <NavigationViewItem Tag="Clips" Icon="Video" Content="Clips"/>
                 <NavigationViewItem Tag="Performers" Icon="Contact" Content="Performers"/>
+                <NavigationViewItem Tag="Series" Icon="Pictures" Content="Series"/>
                 <NavigationViewItem Tag="Unlinked" Icon="Zoom" Content="Unlinked"/>
             </NavigationView.MenuItems>
 

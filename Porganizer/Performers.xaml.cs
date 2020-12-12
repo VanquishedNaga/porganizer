@@ -5,11 +5,11 @@ using Windows.UI.Xaml.Input;
 
 namespace Porganizer
 {
-    public sealed partial class Performers : Page
+    public sealed partial class PerformersView : Page
     {
         public ObservableCollection<Performer> performersList = new ObservableCollection<Performer>();
 
-        public Performers()
+        public PerformersView()
         {
             this.InitializeComponent();
 

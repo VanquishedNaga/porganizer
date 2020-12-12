@@ -66,13 +66,15 @@ namespace Porganizer
                 {
                     db.Open();
 
-                    SqliteCommand insertCommand = new SqliteCommand();
-                    insertCommand.Connection = db;
+                    SqliteCommand insertCommand = new SqliteCommand
+                    {
+                        Connection = db,
 
-                    // Use parameterized query to prevent SQL injection attacks
-                    insertCommand.CommandText =
+                        // Use parameterized query to prevent SQL injection attacks
+                        CommandText =
                         "INSERT INTO FILE (Path, ImportDate, Size)" +
-                        "   VALUES (@Path, CURRENT_DATE, @Size);";
+                        "   VALUES (@Path, CURRENT_DATE, @Size);"
+                    };
                     insertCommand.Parameters.AddWithValue("@Path", path);
                     insertCommand.Parameters.AddWithValue("@Size", size);
 
@@ -173,14 +175,39 @@ namespace Porganizer
             return entries;
         }
 
+        public static void AddSeries(string name)
+        {
+            using (SqliteConnection db = new SqliteConnection("Filename=sqliteSample.db"))
+            {
+                db.Open();
+
+                SqliteCommand insertCommand = new SqliteCommand
+                {
+                    Connection = db
+                };
+
+                // Use parameterized query to prevent SQL injection attacks
+                insertCommand.CommandText =
+                    "INSERT INTO SERIES (Name)" +
+                    "   VALUES (@Name);";
+                insertCommand.Parameters.AddWithValue("@Name", name);
+
+                insertCommand.ExecuteReader();
+
+                db.Close();
+            }
+        }
+
         public static void AddPerformer(string name, DateTimeOffset? date, string ethnicity)
         {
             using (SqliteConnection db = new SqliteConnection("Filename=sqliteSample.db"))
             {
                 db.Open();
 
-                SqliteCommand insertCommand = new SqliteCommand();
-                insertCommand.Connection = db;
+                SqliteCommand insertCommand = new SqliteCommand
+                {
+                    Connection = db
+                };
 
                 Object tempDate = DBNull.Value;
 
@@ -203,14 +230,40 @@ namespace Porganizer
             }
         }
 
+        public static void UpdateSeries(string oldName, string newName)
+        {
+            using (SqliteConnection db = new SqliteConnection("Filename=sqliteSample.db"))
+            {
+                db.Open();
+
+                SqliteCommand updateCommand = new SqliteCommand
+                {
+                    Connection = db
+                };
+                
+                updateCommand.CommandText =
+                    "UPDATE SERIES " +
+                    "   SET Name = @NewName" +
+                    "   WHERE Name = @OldName;";
+                updateCommand.Parameters.AddWithValue("@NewName", newName);
+                updateCommand.Parameters.AddWithValue("@OldName", oldName);
+
+                updateCommand.ExecuteReader();
+
+                db.Close();
+            }
+        }
+
         public static void UpdatePerformer(string oldName, string newName, DateTimeOffset? date, string ethnicity)
         {
             using (SqliteConnection db = new SqliteConnection("Filename=sqliteSample.db"))
             {
                 db.Open();
 
-                SqliteCommand updateCommand = new SqliteCommand();
-                updateCommand.Connection = db;
+                SqliteCommand updateCommand = new SqliteCommand
+                {
+                    Connection = db
+                };
 
                 Object tempDate = DBNull.Value;
 
@@ -237,25 +290,70 @@ namespace Porganizer
             }
         }
 
-        public static void DeletePerformer(string name)
+        static void DeleteRowByName(string table, string name)
         {
             using (SqliteConnection db = new SqliteConnection("Filename=sqliteSample.db"))
             {
                 db.Open();
 
-                SqliteCommand deleteCommand = new SqliteCommand();
-                deleteCommand.Connection = db;
+                SqliteCommand deleteCommand = new SqliteCommand
+                {
+                    Connection = db,
 
-                // Use parameterized query to prevent SQL injection attacks
-                deleteCommand.CommandText =
-                    "DELETE FROM PERFORMER " +
-                    "   WHERE Name = @Name;";
+                    // Use parameterized query to prevent SQL injection attacks
+                    CommandText =
+                    "DELETE FROM " + table +
+                    "   WHERE Name = @Name;"
+                };
+
                 deleteCommand.Parameters.AddWithValue("@Name", name);
 
                 deleteCommand.ExecuteReader();
 
                 db.Close();
             }
+        }
+
+        public static void DeletePerformer(string name)
+        {
+            DeleteRowByName("PERFORMER", name);
+        }
+
+        public static void DeleteSeries(string name)
+        {
+            DeleteRowByName("SERIES", name);
+        }
+
+        public static ObservableCollection<Series> GetSeriesList()
+        {
+            ObservableCollection<Series> entries = new ObservableCollection<Series>();
+
+            using (SqliteConnection db = new SqliteConnection("Filename=sqliteSample.db"))
+            {
+                db.Open();
+
+                SqliteCommand selectCommand = new SqliteCommand(
+                    "SELECT Name FROM SERIES" +
+                    "   ORDER BY Name", db);
+
+                SqliteDataReader query = selectCommand.ExecuteReader();
+
+                while (query.Read())
+                {
+                    TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+
+                    Series temp = new Series
+                    {
+                        Name = query.GetString(0)
+                    };
+
+                    entries.Add(temp);
+                }
+
+                db.Close();
+            }
+
+            return entries;
         }
 
         public static ObservableCollection<Performer> GetPerformerList()
@@ -302,13 +400,15 @@ namespace Porganizer
             {
                 db.Open();
 
-                SqliteCommand insertCommand = new SqliteCommand();
-                insertCommand.Connection = db;
+                SqliteCommand insertCommand = new SqliteCommand
+                {
+                    Connection = db,
 
-                // Use parameterized query to prevent SQL injection attacks
-                insertCommand.CommandText =
+                    // Use parameterized query to prevent SQL injection attacks
+                    CommandText =
                     "INSERT INTO PERFORMANCE (FileId, PerformerId)" +
-                    "   VALUES (@FileId, @PerformerId);";
+                    "   VALUES (@FileId, @PerformerId);"
+                };
                 insertCommand.Parameters.AddWithValue("@FileId", fileId);
                 insertCommand.Parameters.AddWithValue("@PerformerId", performerId);
 
@@ -331,13 +431,15 @@ namespace Porganizer
             {
                 db.Open();
 
-                SqliteCommand deleteCommand = new SqliteCommand();
-                deleteCommand.Connection = db;
+                SqliteCommand deleteCommand = new SqliteCommand
+                {
+                    Connection = db,
 
-                // Use parameterized query to prevent SQL injection attacks
-                deleteCommand.CommandText =
+                    // Use parameterized query to prevent SQL injection attacks
+                    CommandText =
                     "DELETE FROM PERFORMANCE " +
-                    "   WHERE FileId = @FileId AND PerformerId = @PerformerId;";
+                    "   WHERE FileId = @FileId AND PerformerId = @PerformerId;"
+                };
                 deleteCommand.Parameters.AddWithValue("@FileId", fileId);
                 deleteCommand.Parameters.AddWithValue("@PerformerId", performerId);
 

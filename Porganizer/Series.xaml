@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="Porganizer.PerformersView"
+    x:Class="Porganizer.SeriesView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Porganizer"
@@ -15,20 +15,17 @@
         </Grid.RowDefinitions>
 
         <CommandBar DefaultLabelPosition="Right">
-            <AppBarButton Icon="Add" Label="Add Performer" Tapped="AddPerformer_Tapped"/>
-            <AppBarButton x:Name="DeletePerformerButton" Icon="Delete" Label="Delete Performer" Tapped="DeletePerformer_Tapped"/>
-            <AppBarButton x:Name="EditPerformerButton" Icon="Edit" Label="Edit Performer" Tapped="EditPerformer_Tapped"/>
+            <AppBarButton Icon="Add" Label="Add Series" Tapped="AddSeries_Tapped"/>
+            <AppBarButton x:Name="DeleteSeriesButton" Icon="Delete" Label="Delete Series" Tapped="DeleteSeries_Tapped"/>
+            <AppBarButton x:Name="EditSeriesButton" Icon="Edit" Label="Edit Series" Tapped="EditSeries_Tapped"/>
         </CommandBar>
 
-        <GridView x:Name="performerListView" Padding="20" HorizontalAlignment="Stretch" ItemsSource="{x:Bind performersList, Mode=OneWay}" Grid.Row="1" 
-                  SelectionChanged="PerformerListView_SelectionChanged">
+        <GridView x:Name="seriesListView" Padding="20" HorizontalAlignment="Stretch" ItemsSource="{x:Bind seriesList, Mode=OneWay}" Grid.Row="1" 
+                  SelectionChanged="SeriesListView_SelectionChanged">
             <GridView.ItemTemplate>
-                <DataTemplate x:DataType="local:Performer">
+                <DataTemplate x:DataType="local:Series">
                     <StackPanel Width="200">
-                        <Image Source="{x:Bind ProfilePic, Mode=OneWay}" Margin="4" Height="260"/>
                         <TextBlock Text="{x:Bind Name, Mode=OneWay}" Margin="4"/>
-                        <TextBlock Text="{x:Bind Ethnicity, Mode=OneWay}" Margin="4"/>
-                        <TextBlock Text="{x:Bind DateOfBirth.Value.Date.ToShortDateString(), Mode=OneWay}" Margin="4"/>
                     </StackPanel>
                 </DataTemplate>
             </GridView.ItemTemplate>
@@ -42,7 +39,7 @@
                     </MenuFlyout.Items>
                 </MenuFlyout>
             </GridView.Resources>
-            
+
             <GridView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment"  Value="Stretch"></Setter>
@@ -61,9 +58,9 @@
             </GridView.Items>-->
         </GridView>
 
-        <!--<ListView x:Name="performerListView" Padding="20" HorizontalAlignment="Stretch" ItemsSource="{x:Bind performersList, Mode=OneWay}" Grid.Row="1">
+        <!--<ListView x:Name="seriesListView" Padding="20" HorizontalAlignment="Stretch" ItemsSource="{x:Bind seriessList, Mode=OneWay}" Grid.Row="1">
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="lib:Performer">
+                <DataTemplate x:DataType="lib:Series">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="120"/>
@@ -73,7 +70,9 @@
                             <RowDefinition Height="80"/>
                         </Grid.RowDefinitions>
 
-                        --><!--<Image Source="{x:Bind Thumbnail, Mode=OneWay}" Margin="5,5,5,5"/>--><!--
+                        -->
+        <!--<Image Source="{x:Bind Thumbnail, Mode=OneWay}" Margin="5,5,5,5"/>-->
+        <!--
                         <StackPanel Grid.Column="1">
                             <TextBlock Text="{x:Bind Name, Mode=OneWay}" Margin="4"/>
                             <TextBlock Text="{x:Bind Ethnicity, Mode=OneWay}" Margin="4"/>
@@ -97,6 +96,6 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>-->
-        
+
     </Grid>
 </Page>
