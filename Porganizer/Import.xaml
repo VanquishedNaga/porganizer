@@ -17,10 +17,9 @@
 
         <CommandBar DefaultLabelPosition="Right">
             <AppBarSeparator HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
-            <AppBarButton Icon="ImportAll" Label="Import to Database" Tapped="ImportToDatabaseAsync"/>
+            <AppBarButton Icon="ImportAll" Label="Import all to Database" Tapped="ImportToDatabaseAsync"/>
             <AppBarButton Icon="Clear" Label="Clear" Tapped="ClearList"/>
-            <AppBarButton Icon="OpenFile" Label="Add Folder"/>
-            <AppBarButton Icon="Folder" Label="Recent Folders"/>
+            <AppBarButton Icon="OpenFile" Label="Open Folder" Tapped="OpenFolder"/>
             <CommandBar.Content>
                 <StackPanel Orientation="Horizontal" Padding="5" VerticalAlignment="Stretch">
                     <ProgressBar x:Name="Progress" IsIndeterminate="False" Maximum="100" HorizontalAlignment="Left" VerticalAlignment="Center" Width="200"/>

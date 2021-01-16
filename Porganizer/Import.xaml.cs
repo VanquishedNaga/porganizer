@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
+using Windows.Storage.AccessCache;
+using Windows.Storage.Pickers;
+using Windows.Storage.Search;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -74,6 +77,53 @@ namespace Porganizer
             }
 
             StatusText.Text = "Imported " + importingList.Count + " files.";
+        }
+
+        private async void OpenFolder(object sender, RoutedEventArgs e)
+        {
+            FolderPicker folderPicker = new FolderPicker
+            {
+                SuggestedStartLocation = PickerLocationId.Desktop
+            };
+            folderPicker.FileTypeFilter.Add("*");
+            StorageFolder selectedFolder = await folderPicker.PickSingleFolderAsync();
+
+            if (selectedFolder != null)
+            {
+                // Load content of selected folder.
+                LoadVideosFromFolder(selectedFolder);
+            }
+        }
+
+        private async void LoadVideosFromFolder(StorageFolder selectedFolder)
+        {
+            if (selectedFolder != null)
+            {
+                // Clear old files.
+                importingList.Clear();
+
+                AddLog("Loading files...");
+                // Application now has read/write access to all contents in the picked folder (including other sub-folder contents).
+                StorageApplicationPermissions.FutureAccessList.AddOrReplace("PickedFolderToken", selectedFolder);
+
+                // Filter to get video files only.
+                List<string> fileTypeFilter = new List<string>
+                {
+                    ".mp4",
+                    ".wmv",
+                    ".mkv",
+                    ".avi"
+                };
+                QueryOptions queryOptions = new QueryOptions(CommonFileQuery.OrderByName, fileTypeFilter);
+                StorageFileQueryResult results = selectedFolder.CreateFileQueryWithOptions(queryOptions);
+                IReadOnlyList<StorageFile> fileList = await results.GetFilesAsync();
+
+                // Populate file list.
+                foreach (StorageFile file in fileList)
+                {
+                    importingList.Add(new VideoFile(file));
+                }
+            }
         }
     }
 }
