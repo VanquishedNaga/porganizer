@@ -102,10 +102,6 @@ namespace Porganizer
                 // Clear old files.
                 importingList.Clear();
 
-                AddLog("Loading files...");
-                // Application now has read/write access to all contents in the picked folder (including other sub-folder contents).
-                StorageApplicationPermissions.FutureAccessList.AddOrReplace("PickedFolderToken", selectedFolder);
-
                 // Filter to get video files only.
                 List<string> fileTypeFilter = new List<string>
                 {
@@ -123,7 +119,11 @@ namespace Porganizer
                 {
                     importingList.Add(new VideoFile(file));
                 }
+
+                StatusText.Text = "Loaded " + importingList.Count + " files.";
             }
+
+            TextFileNum.Text = importingList.Count + " files";
         }
     }
 }

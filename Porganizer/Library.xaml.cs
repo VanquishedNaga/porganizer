@@ -36,13 +36,17 @@ namespace Porganizer
         public Library()
         {
             this.InitializeComponent();
-            AddLog("Ready.");
 
             DataAccess.InitializeDatabase();
             LoadFilesFromDatabase();
             //Initialization = LoadFolderFromPreviousSession();
 
             performerList = DataAccess.GetPerformerList().ToList();
+        }
+
+        private void DisplayStatusMessage(string message)
+        {
+            StatusText.Text = message;
         }
 
         // Get video files from database.
@@ -55,22 +59,18 @@ namespace Porganizer
             {
                 displayedFileList.Add(videoFile);
             }
+
+            DisplayStatusMessage("Loaded from database");
+            TextFileNum.Text = displayedFileList.Count + " files";
         }
 
         private async Task LoadFolderFromPreviousSession()
         {
             // Load folder from previous session if available.
-            AddLog("Looking for previous folder...");
             if (localSettings.Values["PreviousFolder"] is string token)
             {
-                AddLog(string.Format("token: {0}", token));
                 var tempFolder = await mru.GetItemAsync(token);
                 LoadFolder(tempFolder as StorageFolder);
-                AddLog("Folder loaded.");
-            }
-            else
-            {
-                AddLog("No previous folder found.");
             }
         }
 
@@ -102,7 +102,6 @@ namespace Porganizer
                 // Clear old files.
                 displayedFileList.Clear();
 
-                AddLog("Loading files...");
                 // Application now has read/write access to all contents in the picked folder (including other sub-folder contents).
                 StorageApplicationPermissions.FutureAccessList.AddOrReplace("PickedFolderToken", selectedFolder);
 
@@ -131,21 +130,6 @@ namespace Porganizer
             if (selectedFile.Screen != null)
             {
                 await Windows.System.Launcher.LaunchFileAsync(selectedFile.Screen);
-            }
-        }
-
-        private async void LaunchVideo(object sender, DoubleTappedRoutedEventArgs e)
-        {
-            AddLog("Launching video...");
-            if (gridView1.SelectedItem is VideoFile temp)
-            {
-                if (temp.File != null)
-                {
-                    if (await Windows.System.Launcher.LaunchFileAsync(temp.File))
-                    {
-                        AddLog("Video launched.");
-                    }
-                }
             }
         }
         
@@ -222,10 +206,9 @@ namespace Porganizer
         {
             if (rightClickedFile.File != null)
             {
-                AddLog("Launching video...");
                 if (await Windows.System.Launcher.LaunchFileAsync(rightClickedFile.File))
                 {
-                    AddLog("Video launched.");
+                    DisplayStatusMessage("Video opened.");
                 }
             }
         }
@@ -242,20 +225,9 @@ namespace Porganizer
         {
             if (rightClickedFile.File != null)
             {
-                AddLog("Opening folder...");
                 StorageFolder folder = await rightClickedFile.File.GetParentAsync();
                 var success = await Windows.System.Launcher.LaunchFolderAsync(folder);
-                if (success)
-                {
-                    AddLog("Folder opened.");
-                }
             }
-        }
-
-        // Display log in debug window.
-        void AddLog(string log)
-        {
-            DebugOutput.Text = log + '\n' + DebugOutput.Text;
         }
 
         private void DisplayGif(object sender, PointerRoutedEventArgs e)
@@ -336,7 +308,7 @@ namespace Porganizer
             }
             else
             {
-                AddLog(string.Format("Searching for files by \"{0}\"", args.QueryText));
+                DisplayStatusMessage(string.Format("Searching for files by \"{0}\"...", args.QueryText));
                 List<VideoFile> tempList = DataAccess.GetVideoListByPerformerName(args.QueryText);
 
                 displayedFileList.Clear();
@@ -344,11 +316,34 @@ namespace Porganizer
                 {
                     displayedFileList.Add(videoFile);
                 }
+
+                DisplayStatusMessage("Search completed.");
             }
         }
 
         private void PerformerSearchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
+        }
+
+        private void VideoNameSearchBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            if (args.QueryText == "")
+            {
+                LoadFilesFromDatabase();
+            }
+            else
+            {
+                DisplayStatusMessage(string.Format("Searching for files containing \"{0}\"...", args.QueryText));
+                List<VideoFile> tempList = DataAccess.GetVideoListByFileName(args.QueryText);
+
+                displayedFileList.Clear();
+                foreach (VideoFile videoFile in tempList)
+                {
+                    displayedFileList.Add(videoFile);
+                }
+
+                DisplayStatusMessage("Search completed.");
+            }
         }
     }
 }

@@ -489,5 +489,31 @@ namespace Porganizer
 
             return entries;
         }
+
+        public static List<VideoFile> GetVideoListByFileName(string fileName)
+        {
+            List<VideoFile> entries = new List<VideoFile>();
+
+            using (SqliteConnection db = new SqliteConnection("Filename=sqliteSample.db"))
+            {
+                db.Open();
+
+                SqliteCommand selectCommand = new SqliteCommand(
+                    "SELECT FileId, Path FROM FILE " +
+                    "WHERE Path LIKE '%" + fileName + "%'", db);
+
+                SqliteDataReader query = selectCommand.ExecuteReader();
+
+                while (query.Read())
+                {
+                    VideoFile temp = new VideoFile(query.GetInt16(0), query.GetString(1));
+                    entries.Add(temp);
+                }
+
+                db.Close();
+            }
+
+            return entries;
+        }
     }
 }

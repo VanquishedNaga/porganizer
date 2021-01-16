@@ -14,7 +14,6 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition />
-            <RowDefinition Height="80"/>
         </Grid.RowDefinitions>
 
         <CommandBar DefaultLabelPosition="Right">
@@ -26,17 +25,21 @@
             <AppBarButton Icon="Delete" Label="Delete" Tapped="DeleteFile"/>
             <CommandBar.Content>
                 <StackPanel Orientation="Horizontal" Padding="4" VerticalAlignment="Stretch">
+                    <TextBlock x:Name="TextFileNum" Text="0 files" Margin="12"/>
+                    <AppBarSeparator HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
+                    <TextBlock x:Name="StatusText" Margin="12"/>
+                    <AppBarSeparator HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
                     <ProgressBar x:Name="Progress" IsIndeterminate="False" Maximum="100" HorizontalAlignment="Left" VerticalAlignment="Center" Width="200"/>
-                    <AppBarSeparator HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
-                    <TextBlock x:Name="TextFileNum" Margin="12"/>
-                    <AppBarSeparator HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
-                    <TextBlock x:Name="StatusText" Text="Status" Margin="12"/>
                 </StackPanel>
             </CommandBar.Content>
         </CommandBar>
 
         <StackPanel Orientation="Horizontal" Grid.Row="1">
-            <AutoSuggestBox PlaceholderText="Search" QueryIcon="Find" Width="200" Margin="12"/>
+            <AutoSuggestBox x:Name="VideoNameSearchBox" 
+                            PlaceholderText="Search" 
+                            QueryIcon="Find" 
+                            Width="200" Margin="12"
+                            QuerySubmitted="VideoNameSearchBox_QuerySubmitted"/>
             <ComboBox PlaceholderText="Sort by" Width="200" Margin="12">
                 <x:String>Name</x:String>
                 <x:String>Actress</x:String>
@@ -140,7 +143,5 @@
                 </StackPanel>
             </ScrollViewer>
         </SplitView>
-
-        <TextBox x:Name="DebugOutput" Grid.Row="3" AcceptsReturn="True"/>
     </Grid>
 </Page>

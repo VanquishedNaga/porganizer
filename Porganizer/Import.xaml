@@ -17,17 +17,16 @@
 
         <CommandBar DefaultLabelPosition="Right">
             <AppBarSeparator HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
+            <AppBarButton Icon="OpenFile" Label="Open Folder" Tapped="OpenFolder"/>
             <AppBarButton Icon="ImportAll" Label="Import all to Database" Tapped="ImportToDatabaseAsync"/>
             <AppBarButton Icon="Clear" Label="Clear" Tapped="ClearList"/>
-            <AppBarButton Icon="OpenFile" Label="Open Folder" Tapped="OpenFolder"/>
             <CommandBar.Content>
                 <StackPanel Orientation="Horizontal" Padding="5" VerticalAlignment="Stretch">
+                    <TextBlock x:Name="TextFileNum" Text="0 files" Margin="20,10"/>
+                    <AppBarSeparator HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
+                    <TextBlock x:Name="StatusText" Margin="20,10"/>
+                    <AppBarSeparator HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
                     <ProgressBar x:Name="Progress" IsIndeterminate="False" Maximum="100" HorizontalAlignment="Left" VerticalAlignment="Center" Width="200"/>
-                    <AppBarSeparator HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
-                    <TextBlock x:Name="TextFileNum" Margin="20,10"/>
-                    <AppBarSeparator HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
-                    <TextBlock x:Name="StatusText" Text="Status" Margin="20,10"/>
-
                 </StackPanel>
             </CommandBar.Content>
         </CommandBar>
