@@ -23,6 +23,8 @@
             <AppBarButton Icon="Folder" Label="Recent Folders"/>
             <AppBarSeparator HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
             <AppBarButton Icon="Delete" Label="Delete" Tapped="DeleteFile"/>
+            <AppBarSeparator HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
+            <AppBarButton Icon="Edit" Label="Edit" Tapped="EditFile"/>
             <CommandBar.Content>
                 <StackPanel Orientation="Horizontal" Padding="4" VerticalAlignment="Stretch">
                     <TextBlock x:Name="TextFileNum" Text="0 files" Margin="12"/>
@@ -131,7 +133,7 @@
                     </Grid>
                     <StackPanel x:Name="fileSeriesTag">
                         <TextBlock Text="Series" Style="{ThemeResource TitleTextBlockStyle}"></TextBlock>
-                        <ComboBox x:Name="seriesComboBox" ItemsSource="{x:Bind seriesList}" Width="400" DisplayMemberPath="Name" IsTextSearchEnabled="True"></ComboBox>
+                        <TextBlock x:Name="SelectedFileSeries"></TextBlock>
                     </StackPanel>
                     <StackPanel x:Name="filePerformers">
                         <TextBlock Text="Performers" Style="{ThemeResource TitleTextBlockStyle}"></TextBlock>
@@ -151,7 +153,7 @@
                             </ListBox.Resources>
                         </ListBox>
                     </StackPanel>
-                    <Image x:Name="bitmap" Height="200" HorizontalAlignment="Stretch" Margin="0, 12"/>
+                    <Image x:Name="ImgThumbnail" Height="200" HorizontalAlignment="Stretch" Margin="0, 12"/>
                     <Image x:Name="ImgScreenshot" Height="200" HorizontalAlignment="Stretch" Tapped="Screens_Clicked" Margin="0, 12" Source="{Binding ScreenImage}"/>
                 </StackPanel>
             </ScrollViewer>

@@ -158,11 +158,11 @@ namespace Porganizer
                     // Always display GIF in details view.
                     if (selectedFile.Gif != null)
                     {
-                        bitmap.Source = selectedFile.Gif;
+                        ImgThumbnail.Source = selectedFile.Gif;
                     }
                     else
                     {
-                        bitmap.Source = selectedFile.Thumbnail;
+                        ImgThumbnail.Source = selectedFile.Thumbnail;
                     }
                 }
 
@@ -176,6 +176,9 @@ namespace Porganizer
                 }
 
                 RefreshFilePerformers();
+
+                Series fileSeries = DataAccess.GetSeriesById(selectedFile.FileId);
+                SelectedFileSeries.Text = fileSeries.Name;
             }
         }
 
@@ -184,7 +187,7 @@ namespace Porganizer
             TextFileSeries.Text = "";
             TextFileTitle.Text = "";
 
-            bitmap.Source = null;
+            ImgThumbnail.Source = null;
 
             performerComboBox.SelectedIndex = -1;
             filePerformerList.Clear();
@@ -255,11 +258,19 @@ namespace Porganizer
             if (selectedFile != null)
             {
                 StatusText.Text = "Deleting " + selectedFile.File.Name + "...";
-                DataAccess.RemoveFileFromDatabase(selectedFile.File.Path);
+                DataAccess.DeleteFile(selectedFile.FileId);
                 StatusText.Text = "Deleted " + selectedFile.File.Name + ".";
 
                 // Refresh list after deleting.
                 LoadFilesFromDatabase();
+            }
+        }
+
+        private void EditFile(object sender, RoutedEventArgs e)
+        {
+            if (selectedFile != null)
+            {
+                this.Frame.Navigate(typeof(FormEditFile), selectedFile);
             }
         }
 

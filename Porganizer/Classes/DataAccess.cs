@@ -85,17 +85,6 @@ namespace Porganizer
             }
         }
 
-        public static void RemoveFileFromDatabase(string path)
-        {
-            using (SqliteConnection db = new SqliteConnection("Filename=sqliteSample.db"))
-            {
-                db.Open();
-
-                SqliteCommand deleteCommand = new SqliteCommand("DELETE FROM FILE WHERE Path=\"" + path + "\"", db);
-                deleteCommand.ExecuteReader();
-            }
-        }
-
         public static bool IsFileInDatabase(string path)
         {
             bool isInDatabase = false;
@@ -254,6 +243,31 @@ namespace Porganizer
             }
         }
 
+        public static void UpdateFile(int fileId, int seriesId)
+        {
+            using (SqliteConnection db = new SqliteConnection("Filename=sqliteSample.db"))
+            {
+                db.Open();
+
+                SqliteCommand updateCommand = new SqliteCommand
+                {
+                    Connection = db
+                };
+
+                // Use parameterized query to prevent SQL injection attacks
+                updateCommand.CommandText =
+                    "UPDATE FILE" +
+                    "   SET SeriesId = @SeriesId" +
+                    "   WHERE FileId = @FileId;";
+                updateCommand.Parameters.AddWithValue("@SeriesId", seriesId);
+                updateCommand.Parameters.AddWithValue("@FileId", fileId);
+
+                updateCommand.ExecuteReader();
+
+                db.Close();
+            }
+        }
+
         public static void UpdatePerformer(string oldName, string newName, DateTimeOffset? date, string ethnicity)
         {
             using (SqliteConnection db = new SqliteConnection("Filename=sqliteSample.db"))
@@ -378,6 +392,33 @@ namespace Porganizer
             }
 
             return entries;
+        }
+
+        public static Series GetSeriesById(int seriesId)
+        {
+            Series result = new Series();
+
+            using (SqliteConnection db = new SqliteConnection("Filename=sqliteSample.db"))
+            {
+                db.Open();
+
+                SqliteCommand selectCommand = new SqliteCommand(
+                    "SELECT Name FROM SERIES" +
+                    "   WHERE SeriesId = @SeriesId;", db);
+
+                selectCommand.Parameters.AddWithValue("@SeriesId", seriesId);
+
+                SqliteDataReader query = selectCommand.ExecuteReader();
+
+                while (query.Read())
+                {
+                    result.Name = query.GetString(0);
+                }
+
+                db.Close();
+            }
+
+            return result;
         }
 
         public static ObservableCollection<Performer> GetPerformerList()

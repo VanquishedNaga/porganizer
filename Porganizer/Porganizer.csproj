@@ -96,6 +96,9 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Classes\BindableBase.cs" />
+    <Compile Include="FormEditFile.xaml.cs">
+      <DependentUpon>FormEditFile.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PageUnlinked.xaml.cs">
       <DependentUpon>PageUnlinked.xaml</DependentUpon>
     </Compile>
@@ -189,6 +192,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="FormEditFile.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="PageUnlinked.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

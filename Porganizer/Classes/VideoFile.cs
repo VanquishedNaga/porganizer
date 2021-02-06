@@ -53,7 +53,7 @@ namespace Porganizer
             InitFromFilePath(filePath);
         }
 
-        public bool isUnlinked()
+        public bool IsUnlinked()
         {
             return (File == null);
         }

@@ -4,6 +4,7 @@
     {
         public Series()
         {
+            Name = "";
         }
 
         // Attributes.

@@ -1,0 +1,31 @@
+﻿<Page
+    x:Class="Porganizer.FormEditFile"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Porganizer"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <CommandBar DefaultLabelPosition="Right">
+            <AppBarButton Icon="Save" Label="Save" Tapped="SaveChanges"/>
+        </CommandBar>
+        
+        <StackPanel Grid.Row="1">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <Image x:Name="ImgThumbnail" Height="200" HorizontalAlignment="Stretch" Margin="12" Source="{x:Bind videoFile.Thumbnail}"/>
+                <Image x:Name="ImgScreenshot" Height="200" HorizontalAlignment="Stretch" Margin="12" Source="{x:Bind videoFile.ScreenImage}"/>
+            </StackPanel>
+            <TextBox x:Name="FileName" Header= "Name" MaxLength="50" Width="400" HorizontalAlignment="Left"/>
+            <ComboBox x:Name="SeriesComboBox" Header= "Series" ItemsSource="{x:Bind seriesList}" Width="400" DisplayMemberPath="Name" IsTextSearchEnabled="True"></ComboBox>
+            <ComboBox x:Name="PerformerComboBox" Header= "Performer" ItemsSource="{x:Bind performerList}" Width="400" DisplayMemberPath="Name" IsTextSearchEnabled="True"></ComboBox>
+        </StackPanel>
+    </Grid>
+</Page>
