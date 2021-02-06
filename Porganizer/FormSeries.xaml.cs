@@ -6,10 +6,10 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Porganizer
 {
-    public sealed partial class SeriesForm : Page
+    public sealed partial class FormSeries : Page
     {
         private Series temp = null;
-        public SeriesForm()
+        public FormSeries()
         {
             this.InitializeComponent();
             SaveButton.IsEnabled = IsFormFilled();

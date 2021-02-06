@@ -95,39 +95,39 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BindableBase.cs" />
+    <Compile Include="Classes\BindableBase.cs" />
     <Compile Include="PageUnlinked.xaml.cs">
       <DependentUpon>PageUnlinked.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Series.cs" />
-    <Compile Include="Series.xaml.cs">
-      <DependentUpon>Series.xaml</DependentUpon>
+    <Compile Include="Classes\Series.cs" />
+    <Compile Include="PageSeries.xaml.cs">
+      <DependentUpon>PageSeries.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DataAccess.cs" />
-    <Compile Include="Performer.cs" />
+    <Compile Include="Classes\DataAccess.cs" />
+    <Compile Include="Classes\Performer.cs" />
     <Compile Include="Home.xaml.cs">
       <DependentUpon>Home.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Import.xaml.cs">
-      <DependentUpon>Import.xaml</DependentUpon>
+    <Compile Include="PageImport.xaml.cs">
+      <DependentUpon>PageImport.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Library.xaml.cs">
-      <DependentUpon>Library.xaml</DependentUpon>
+    <Compile Include="PageLibrary.xaml.cs">
+      <DependentUpon>PageLibrary.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PerformerForm.xaml.cs">
-      <DependentUpon>PerformerForm.xaml</DependentUpon>
+    <Compile Include="FormPerformer.xaml.cs">
+      <DependentUpon>FormPerformer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Performers.xaml.cs">
-      <DependentUpon>Performers.xaml</DependentUpon>
+    <Compile Include="PagePerformers.xaml.cs">
+      <DependentUpon>PagePerformers.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SeriesForm.xaml.cs">
-      <DependentUpon>SeriesForm.xaml</DependentUpon>
+    <Compile Include="FormSeries.xaml.cs">
+      <DependentUpon>FormSeries.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings.xaml.cs">
-      <DependentUpon>Settings.xaml</DependentUpon>
+    <Compile Include="PageSettings.xaml.cs">
+      <DependentUpon>PageSettings.xaml</DependentUpon>
     </Compile>
-    <Compile Include="VideoFile.cs" />
+    <Compile Include="Classes\VideoFile.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -193,7 +193,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Series.xaml">
+    <Page Include="PageSeries.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -201,27 +201,27 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Import.xaml">
+    <Page Include="PageImport.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Library.xaml">
+    <Page Include="PageLibrary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PerformerForm.xaml">
+    <Page Include="FormPerformer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Performers.xaml">
+    <Page Include="PagePerformers.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SeriesForm.xaml">
+    <Page Include="FormSeries.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Settings.xaml">
+    <Page Include="PageSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

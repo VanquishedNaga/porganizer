@@ -18,7 +18,7 @@ using System.Linq;
 
 namespace Porganizer
 {
-    public sealed partial class Library : Page
+    public sealed partial class PageLibrary : Page
     {
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         List<Performer> performerList = new List<Performer>();
@@ -32,7 +32,7 @@ namespace Porganizer
         ObservableCollection<VideoFile> displayedFileList = new ObservableCollection<VideoFile>();
         ObservableCollection<Performer> filePerformerList = new ObservableCollection<Performer>();
 
-        public Library()
+        public PageLibrary()
         {
             this.InitializeComponent();
 

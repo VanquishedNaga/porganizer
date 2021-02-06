@@ -26,11 +26,11 @@ namespace Porganizer
         // List of ValueTuple holding the Navigation Tag and the relative Navigation Page
         private readonly List<(string Tag, Type Page)> _pages = new List<(string Tag, Type Page)>
         {
-            ("Import", typeof(Import)),
-            ("Library", typeof(Library)),
-            ("Clips", typeof(Library)),
-            ("Performers", typeof(PerformersView)),
-            ("Series", typeof(SeriesView)),
+            ("Import", typeof(PageImport)),
+            ("Library", typeof(PageLibrary)),
+            ("Clips", typeof(PageLibrary)),
+            ("Performers", typeof(PagePerformers)),
+            ("Series", typeof(PageSeries)),
             ("Unlinked", typeof(PageUnlinked)),
         };
 
@@ -76,7 +76,7 @@ namespace Porganizer
             Type _page = null;
             if (navItemTag == "settings")
             {
-                _page = typeof(Settings);
+                _page = typeof(PageSettings);
             }
             else
             {
@@ -126,7 +126,7 @@ namespace Porganizer
         {
             NavView.IsBackEnabled = ContentFrame.CanGoBack;
 
-            if (ContentFrame.SourcePageType == typeof(Settings))
+            if (ContentFrame.SourcePageType == typeof(PageSettings))
             {
                 // SettingsItem is not part of NavView.MenuItems, and doesn't have a Tag.
                 NavView.SelectedItem = (NavigationViewItem)NavView.SettingsItem;

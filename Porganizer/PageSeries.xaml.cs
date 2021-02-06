@@ -5,11 +5,11 @@ using Windows.UI.Xaml.Input;
 
 namespace Porganizer
 {
-    public sealed partial class SeriesView : Page
+    public sealed partial class PageSeries : Page
     {
         public ObservableCollection<Series> seriesList = new ObservableCollection<Series>();
 
-        public SeriesView()
+        public PageSeries()
         {
             this.InitializeComponent();
 
@@ -45,7 +45,7 @@ namespace Porganizer
 
         private void AddSeries_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(SeriesForm));
+            this.Frame.Navigate(typeof(FormSeries));
         }
 
         private void DeleteSeries_Tapped(object sender, TappedRoutedEventArgs e)
@@ -87,7 +87,7 @@ namespace Porganizer
         {
             if (seriesListView.SelectedItem is Series series)
             {
-                this.Frame.Navigate(typeof(SeriesForm), series);
+                this.Frame.Navigate(typeof(FormSeries), series);
             }
         }
     }

@@ -12,12 +12,12 @@ using Windows.UI.Xaml.Input;
 
 namespace Porganizer
 {
-    public sealed partial class Import : Page
+    public sealed partial class PageImport : Page
     {
         public ObservableCollection<VideoFile> importingList = new ObservableCollection<VideoFile>();
         List<string> paths = new List<string>();
 
-        public Import()
+        public PageImport()
         {
             this.InitializeComponent();
         }

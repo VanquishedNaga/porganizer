@@ -5,11 +5,11 @@ using Windows.UI.Xaml.Input;
 
 namespace Porganizer
 {
-    public sealed partial class PerformersView : Page
+    public sealed partial class PagePerformers : Page
     {
         public ObservableCollection<Performer> performersList = new ObservableCollection<Performer>();
 
-        public PerformersView()
+        public PagePerformers()
         {
             this.InitializeComponent();
 
@@ -45,7 +45,7 @@ namespace Porganizer
 
         private void AddPerformer_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(PerformerForm));
+            this.Frame.Navigate(typeof(FormPerformer));
         }
 
         private void DeletePerformer_Tapped(object sender, TappedRoutedEventArgs e)
@@ -87,7 +87,7 @@ namespace Porganizer
         {
             if (performerListView.SelectedItem is Performer performer)
             {
-                this.Frame.Navigate(typeof(PerformerForm), performer);
+                this.Frame.Navigate(typeof(FormPerformer), performer);
             }
         }
     }

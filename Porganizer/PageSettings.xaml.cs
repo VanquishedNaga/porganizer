@@ -7,12 +7,12 @@ using Windows.UI.Xaml.Input;
 
 namespace Porganizer
 {
-    public sealed partial class Settings : Page
+    public sealed partial class PageSettings : Page
     {
         StorageItemAccessList futureAccessList = StorageApplicationPermissions.FutureAccessList;
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
 
-        public Settings()
+        public PageSettings()
         {
             this.InitializeComponent();
             LoadPerformerImageFolderAsync();
