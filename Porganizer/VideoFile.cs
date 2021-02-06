@@ -53,6 +53,11 @@ namespace Porganizer
             InitFromFilePath(filePath);
         }
 
+        public bool isUnlinked()
+        {
+            return (File == null);
+        }
+
         private async void InitFromFilePath(string filePath)
         {
             StorageFile temp = null;

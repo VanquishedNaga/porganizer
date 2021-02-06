@@ -324,6 +324,30 @@ namespace Porganizer
             DeleteRowByName("SERIES", name);
         }
 
+        public static void DeleteFile(int fileId)
+        {
+            using (SqliteConnection db = new SqliteConnection("Filename=sqliteSample.db"))
+            {
+                db.Open();
+
+                SqliteCommand deleteCommand = new SqliteCommand
+                {
+                    Connection = db,
+
+                    // Use parameterized query to prevent SQL injection attacks
+                    CommandText =
+                    "DELETE FROM FILE" +
+                    "   WHERE FileId = @FileId;"
+                };
+
+                deleteCommand.Parameters.AddWithValue("@FileId", fileId);
+
+                deleteCommand.ExecuteReader();
+
+                db.Close();
+            }
+        }
+
         public static ObservableCollection<Series> GetSeriesList()
         {
             ObservableCollection<Series> entries = new ObservableCollection<Series>();

@@ -22,6 +22,8 @@ namespace Porganizer
     /// </summary>
     sealed partial class App : Application
     {
+        public static List<VideoFile> databaseVideoFiles = new List<VideoFile>();
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -30,6 +32,7 @@ namespace Porganizer
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            databaseVideoFiles = DataAccess.GetVideoList();
         }
 
         /// <summary>

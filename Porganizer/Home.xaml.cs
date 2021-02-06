@@ -31,7 +31,7 @@ namespace Porganizer
             ("Clips", typeof(Library)),
             ("Performers", typeof(PerformersView)),
             ("Series", typeof(SeriesView)),
-            ("Unlinked", typeof(Library)),
+            ("Unlinked", typeof(PageUnlinked)),
         };
 
         private void NavView_Loaded(object sender, RoutedEventArgs e)

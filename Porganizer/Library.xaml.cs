@@ -22,16 +22,15 @@ namespace Porganizer
     {
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         List<Performer> performerList = new List<Performer>();
-        List<VideoFile> databaseVideoFiles = new List<VideoFile>();
+        List<Series> seriesList = new List<Series>();
         Performer rightClickedPerformer;
         Stopwatch stopwatch = new Stopwatch();
         StorageFolder localFolder = ApplicationData.Current.LocalFolder;
         StorageItemMostRecentlyUsedList mru = StorageApplicationPermissions.MostRecentlyUsedList;
         VideoFile rightClickedFile;
         VideoFile selectedFile;
-        public ObservableCollection<VideoFile> displayedFileList = new ObservableCollection<VideoFile>();
-        public ObservableCollection<Performer> filePerformerList = new ObservableCollection<Performer>();
-        //public Task Initialization { get; private set; }
+        ObservableCollection<VideoFile> displayedFileList = new ObservableCollection<VideoFile>();
+        ObservableCollection<Performer> filePerformerList = new ObservableCollection<Performer>();
 
         public Library()
         {
@@ -42,6 +41,7 @@ namespace Porganizer
             //Initialization = LoadFolderFromPreviousSession();
 
             performerList = DataAccess.GetPerformerList().ToList();
+            seriesList = DataAccess.GetSeriesList().ToList();
         }
 
         private void DisplayStatusMessage(string message)
@@ -53,9 +53,8 @@ namespace Porganizer
         private void LoadFilesFromDatabase()
         {
             displayedFileList.Clear();
-            databaseVideoFiles = DataAccess.GetVideoList();
 
-            foreach (VideoFile videoFile in databaseVideoFiles)
+            foreach (VideoFile videoFile in App.databaseVideoFiles)
             {
                 displayedFileList.Add(videoFile);
             }
@@ -267,14 +266,24 @@ namespace Porganizer
         private void GridView1_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             GridView gridView = (GridView)sender;
-            rightClickedFile = ((FrameworkElement)e.OriginalSource).DataContext as VideoFile;
 
-            if (rightClickedFile.Screen == null)
+            // Single or multiple items selected?
+            if (gridView1.SelectedItems.Count > 1)
             {
-                videoMenuFlyout.Items[1].Visibility = Visibility.Collapsed;
+                multiFileSelectedFlyout.ShowAt(gridView, e.GetPosition(gridView));
             }
+            else
+            {
+                // Right click takes effect on right clicked file, not selected file.
+                rightClickedFile = ((FrameworkElement)e.OriginalSource).DataContext as VideoFile;
 
-            videoMenuFlyout.ShowAt(gridView, e.GetPosition(gridView));
+                if (rightClickedFile.Screen == null)
+                {
+                    videoMenuFlyout.Items[1].Visibility = Visibility.Collapsed;
+                }
+
+                videoMenuFlyout.ShowAt(gridView, e.GetPosition(gridView));
+            }
         }
 
         private void AddPerformerButton_Tapped(object sender, TappedRoutedEventArgs e)
@@ -344,6 +353,11 @@ namespace Porganizer
 
                 DisplayStatusMessage("Search completed.");
             }
+        }
+
+        private void ApplySeriesTag_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

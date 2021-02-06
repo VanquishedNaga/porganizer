@@ -96,6 +96,9 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="BindableBase.cs" />
+    <Compile Include="PageUnlinked.xaml.cs">
+      <DependentUpon>PageUnlinked.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Series.cs" />
     <Compile Include="Series.xaml.cs">
       <DependentUpon>Series.xaml</DependentUpon>
@@ -186,6 +189,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="PageUnlinked.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Series.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
